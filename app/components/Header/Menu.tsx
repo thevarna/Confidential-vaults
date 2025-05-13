@@ -8,6 +8,7 @@ import { motion } from 'framer-motion';
 const routes: { name: string; route: string; icon: string; target?: string }[] = [
 	// { name: 'Swap', route: '/', icon: '/icon/swap.svg', target: '' },
 	// { name: 'Deposit', route: '/deposit', icon: '/icon/faucet.svg', target: '' },
+	{ name: 'Vault', route: '/', icon: '/icon/coins.svg', target: ''},
 	{ name: 'Payment', route: '/payment', icon: '/icon/payment.svg', target: '' },
 	// { name: 'Balance', route: '/balance', icon: '/icon/faucet.svg', target: '' },
 	{ name: 'Faucet', route: '/faucet', icon: '/icon/faucet.svg', target: '' },

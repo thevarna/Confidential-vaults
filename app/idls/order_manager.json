@@ -1,0 +1,554 @@
+{
+    "address": "Acnjuc5m2iASg5wtPkSMzwA48P9iT6ggMm6AmB4GYBJU",
+    "metadata": {
+        "name": "order_manager",
+        "version": "0.1.0",
+        "spec": "0.1.0",
+        "description": "Created with Anchor"
+    },
+    "instructions": [
+        {
+            "name": "aggregate_orders",
+            "discriminator": [
+                120,
+                217,
+                93,
+                51,
+                176,
+                130,
+                171,
+                176
+            ],
+            "accounts": [
+                {
+                    "name": "order_manager",
+                    "writable": true
+                },
+                {
+                    "name": "relayer",
+                    "signer": true
+                },
+                {
+                    "name": "pet_executor_program",
+                    "address": "65veyWr4M57qBv83ZFD79LXT5DyovxMgdDZLzApR3oCK"
+                },
+                {
+                    "name": "executor",
+                    "writable": true
+                }
+            ],
+            "args": []
+        },
+        {
+            "name": "initialize",
+            "discriminator": [
+                175,
+                175,
+                109,
+                31,
+                13,
+                152,
+                155,
+                237
+            ],
+            "accounts": [
+                {
+                    "name": "order_manager",
+                    "writable": true,
+                    "signer": true
+                },
+                {
+                    "name": "payer",
+                    "writable": true,
+                    "signer": true
+                },
+                {
+                    "name": "system_program",
+                    "address": "11111111111111111111111111111111"
+                }
+            ],
+            "args": [
+                {
+                    "name": "relayer",
+                    "type": "pubkey"
+                },
+                {
+                    "name": "solver",
+                    "type": "pubkey"
+                },
+                {
+                    "name": "etoken_in_wrapper",
+                    "type": "pubkey"
+                },
+                {
+                    "name": "etoken_out_wrapper",
+                    "type": "pubkey"
+                },
+                {
+                    "name": "etoken_in",
+                    "type": "pubkey"
+                },
+                {
+                    "name": "etoken_out",
+                    "type": "pubkey"
+                },
+                {
+                    "name": "token_in_mint",
+                    "type": "pubkey"
+                },
+                {
+                    "name": "token_out_mint",
+                    "type": "pubkey"
+                }
+            ]
+        },
+        {
+            "name": "is_order_count_above_threshold",
+            "discriminator": [
+                115,
+                197,
+                158,
+                14,
+                1,
+                146,
+                239,
+                66
+            ],
+            "accounts": [
+                {
+                    "name": "order_manager",
+                    "writable": true
+                }
+            ],
+            "args": [],
+            "returns": "bool"
+        },
+        {
+            "name": "place_order",
+            "discriminator": [
+                51,
+                194,
+                155,
+                175,
+                109,
+                130,
+                96,
+                106
+            ],
+            "accounts": [
+                {
+                    "name": "order_manager",
+                    "writable": true
+                },
+                {
+                    "name": "user",
+                    "writable": true
+                },
+                {
+                    "name": "authority",
+                    "signer": true
+                },
+                {
+                    "name": "eusdc_token_account",
+                    "writable": true
+                },
+                {
+                    "name": "pet_executor_program",
+                    "address": "65veyWr4M57qBv83ZFD79LXT5DyovxMgdDZLzApR3oCK"
+                },
+                {
+                    "name": "token_program",
+                    "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+                },
+                {
+                    "name": "etoken_program",
+                    "address": "EgvZcun7jwa2rXUYGyeTYp9BVRTmf4n3TAcDC2C2FfmP"
+                },
+                {
+                    "name": "executor",
+                    "writable": true
+                }
+            ],
+            "args": [
+                {
+                    "name": "deadline",
+                    "type": "u64"
+                },
+                {
+                    "name": "amount_in",
+                    "type": {
+                        "defined": {
+                            "name": "Einput"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "process_solver_request",
+            "discriminator": [
+                191,
+                167,
+                6,
+                16,
+                74,
+                166,
+                236,
+                107
+            ],
+            "accounts": [
+                {
+                    "name": "order_manager",
+                    "writable": true
+                },
+                {
+                    "name": "owner",
+                    "signer": true
+                },
+                {
+                    "name": "usdc_token_account",
+                    "writable": true
+                },
+                {
+                    "name": "usdc_mint"
+                },
+                {
+                    "name": "token_program",
+                    "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+                },
+                {
+                    "name": "vault",
+                    "writable": true
+                },
+                {
+                    "name": "vault_authority"
+                },
+                {
+                    "name": "vault_token_account",
+                    "writable": true
+                },
+                {
+                    "name": "vault_program",
+                    "address": "3onKTyitdedoMfJ2Yi35HaMong68DVzTrwDu3Qz4VNZH"
+                }
+            ],
+            "args": [
+                {
+                    "name": "usdc_amount",
+                    "type": "u64"
+                }
+            ]
+        }
+    ],
+    "accounts": [
+        {
+            "name": "AccountData",
+            "discriminator": [
+                23,
+                205,
+                88,
+                172,
+                233,
+                226,
+                180,
+                239
+            ]
+        },
+        {
+            "name": "OrderManager",
+            "discriminator": [
+                245,
+                56,
+                16,
+                211,
+                231,
+                83,
+                101,
+                242
+            ]
+        },
+        {
+            "name": "TokenAccount",
+            "discriminator": [
+                220,
+                131,
+                236,
+                16,
+                145,
+                206,
+                207,
+                54
+            ]
+        },
+        {
+            "name": "Vault",
+            "discriminator": [
+                211,
+                8,
+                232,
+                43,
+                2,
+                152,
+                117,
+                119
+            ]
+        }
+    ],
+    "events": [
+        {
+            "name": "OrderPlaced",
+            "discriminator": [
+                96,
+                130,
+                204,
+                234,
+                169,
+                219,
+                216,
+                227
+            ]
+        },
+        {
+            "name": "OrdersProcessed",
+            "discriminator": [
+                128,
+                239,
+                49,
+                181,
+                173,
+                129,
+                154,
+                146
+            ]
+        }
+    ],
+    "errors": [
+        {
+            "code": 6000,
+            "name": "NotEnoughOrders",
+            "msg": "Not enough orders"
+        }
+    ],
+    "types": [
+        {
+            "name": "AccountData",
+            "type": {
+                "kind": "struct"
+            }
+        },
+        {
+            "name": "Einput",
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "handle",
+                        "type": "u128"
+                    },
+                    {
+                        "name": "proof",
+                        "type": "bytes"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "Euint64",
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "handle",
+                        "type": "u128"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "Order",
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "deadline",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "sender",
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "amount_in",
+                        "type": {
+                            "defined": {
+                                "name": "Euint64"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "OrderManager",
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "admin",
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "relayer",
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "solver",
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "etoken_in_wrapper",
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "etoken_out_wrapper",
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "etoken_in",
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "etoken_out",
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "token_in_mint",
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "token_out_mint",
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "orders",
+                        "type": {
+                            "vec": {
+                                "defined": {
+                                    "name": "Order"
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "OrderPlaced",
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "order",
+                        "type": {
+                            "defined": {
+                                "name": "Order"
+                            }
+                        }
+                    },
+                    {
+                        "name": "sender",
+                        "type": "pubkey"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "OrdersProcessed",
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "order_type",
+                        "type": "string"
+                    },
+                    {
+                        "name": "timestamp",
+                        "type": "i64"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "TokenAccount",
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "mint",
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "owner",
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "amount",
+                        "type": {
+                            "defined": {
+                                "name": "Euint64"
+                            }
+                        }
+                    },
+                    {
+                        "name": "delegate",
+                        "type": {
+                            "option": "pubkey"
+                        }
+                    },
+                    {
+                        "name": "is_initialized",
+                        "type": "bool"
+                    },
+                    {
+                        "name": "is_frozen",
+                        "type": "bool"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "Vault",
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "deposited_amount",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "withdrawn_amount",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "interest_earned",
+                        "type": {
+                            "option": "u64"
+                        }
+                    },
+                    {
+                        "name": "initialized",
+                        "type": "bool"
+                    },
+                    {
+                        "name": "owner",
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "mint",
+                        "type": "pubkey"
+                    }
+                ]
+            }
+        }
+    ]
+}

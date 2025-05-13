@@ -1,8 +1,8 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { AddToNetworkButton } from '../AddToNetworkButton/AddToNetworkButton';
-import CustomConnectButton from '../ConnectButton/ConnectButton';
+// import { AddToNetworkButton } from '../AddToNetworkButton/AddToNetworkButton';
+// import CustomConnectButton from '../ConnectButton/ConnectButton';
 
 interface MobileMenuProps {
 	isOpen: boolean;

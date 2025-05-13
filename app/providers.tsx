@@ -1,28 +1,28 @@
+
 "use client";
 
-import React from "react";
-import { WagmiProvider } from "wagmi";
-import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { config } from "@/lib/config";
-import { SessionProvider } from 'next-auth/react';
+import { ConnectionProvider, WalletProvider } from "@solana/wallet-adapter-react";
+import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
+import { PhantomWalletAdapter, SolflareWalletAdapter } from "@solana/wallet-adapter-wallets";
+import { useMemo } from "react";
+import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 
-const queryClient = new QueryClient();
-
-type Props = {
-  children: React.ReactNode;
-};
-
-export default function Providers({ children }: Props) {
-  return (
-    <WagmiProvider config={config}>
-      <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider>
-          <SessionProvider>
-            {children}
-          </SessionProvider>
-        </RainbowKitProvider>
-      </QueryClientProvider>
-    </WagmiProvider>
+export default function Providers({ children }: { children: React.ReactNode }) {
+  const network = WalletAdapterNetwork.Devnet;
+  // const endpoint = useMemo(() => clusterApiUrl(network, true), [network]);
+  const wallets = useMemo(() => [
+    new PhantomWalletAdapter(),
+    new SolflareWalletAdapter()
+  ],
+    [network]
   );
+  return (
+    <ConnectionProvider endpoint={process.env.NEXT_PUBLIC_RPC_URL!}>
+      <WalletProvider wallets={wallets} autoConnect>
+        <WalletModalProvider>
+          {children}
+        </WalletModalProvider>
+      </WalletProvider>
+    </ConnectionProvider>
+  )
 }

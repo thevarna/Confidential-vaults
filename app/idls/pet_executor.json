@@ -1,0 +1,398 @@
+{
+    "address": "65veyWr4M57qBv83ZFD79LXT5DyovxMgdDZLzApR3oCK",
+    "metadata": {
+        "name": "pet_executor",
+        "version": "0.1.0",
+        "spec": "0.1.0",
+        "description": "Created with Anchor"
+    },
+    "instructions": [
+        {
+            "name": "add",
+            "discriminator": [
+                41,
+                249,
+                249,
+                146,
+                197,
+                111,
+                56,
+                181
+            ],
+            "accounts": [
+                {
+                    "name": "executor",
+                    "writable": true
+                }
+            ],
+            "args": [
+                {
+                    "name": "lhs",
+                    "type": {
+                        "defined": {
+                            "name": "Euint64"
+                        }
+                    }
+                },
+                {
+                    "name": "rhs",
+                    "type": {
+                        "defined": {
+                            "name": "Euint64"
+                        }
+                    }
+                }
+            ],
+            "returns": {
+                "defined": {
+                    "name": "Euint64"
+                }
+            }
+        },
+        {
+            "name": "as_euint64",
+            "discriminator": [
+                237,
+                38,
+                243,
+                127,
+                1,
+                245,
+                38,
+                133
+            ],
+            "accounts": [
+                {
+                    "name": "executor",
+                    "writable": true
+                }
+            ],
+            "args": [
+                {
+                    "name": "einput",
+                    "type": {
+                        "defined": {
+                            "name": "Einput"
+                        }
+                    }
+                }
+            ],
+            "returns": {
+                "defined": {
+                    "name": "Euint64"
+                }
+            }
+        },
+        {
+            "name": "eq",
+            "discriminator": [
+                242,
+                107,
+                96,
+                104,
+                151,
+                189,
+                206,
+                161
+            ],
+            "accounts": [
+                {
+                    "name": "executor",
+                    "writable": true
+                }
+            ],
+            "args": [
+                {
+                    "name": "lhs",
+                    "type": {
+                        "defined": {
+                            "name": "Euint64"
+                        }
+                    }
+                },
+                {
+                    "name": "rhs",
+                    "type": {
+                        "defined": {
+                            "name": "Euint64"
+                        }
+                    }
+                }
+            ],
+            "returns": {
+                "defined": {
+                    "name": "Ebool"
+                }
+            }
+        },
+        {
+            "name": "initialize",
+            "discriminator": [
+                175,
+                175,
+                109,
+                31,
+                13,
+                152,
+                155,
+                237
+            ],
+            "accounts": [
+                {
+                    "name": "executor",
+                    "writable": true,
+                    "signer": true
+                },
+                {
+                    "name": "payer",
+                    "writable": true,
+                    "signer": true
+                },
+                {
+                    "name": "system_program",
+                    "address": "11111111111111111111111111111111"
+                }
+            ],
+            "args": []
+        },
+        {
+            "name": "le",
+            "discriminator": [
+                53,
+                205,
+                170,
+                162,
+                188,
+                248,
+                110,
+                15
+            ],
+            "accounts": [
+                {
+                    "name": "executor",
+                    "writable": true
+                }
+            ],
+            "args": [
+                {
+                    "name": "lhs",
+                    "type": {
+                        "defined": {
+                            "name": "Euint64"
+                        }
+                    }
+                },
+                {
+                    "name": "rhs",
+                    "type": {
+                        "defined": {
+                            "name": "Euint64"
+                        }
+                    }
+                }
+            ],
+            "returns": {
+                "defined": {
+                    "name": "Ebool"
+                }
+            }
+        },
+        {
+            "name": "select",
+            "discriminator": [
+                135,
+                147,
+                132,
+                101,
+                155,
+                102,
+                202,
+                124
+            ],
+            "accounts": [
+                {
+                    "name": "executor",
+                    "writable": true
+                }
+            ],
+            "args": [
+                {
+                    "name": "control",
+                    "type": {
+                        "defined": {
+                            "name": "Ebool"
+                        }
+                    }
+                },
+                {
+                    "name": "lhs",
+                    "type": {
+                        "defined": {
+                            "name": "Euint64"
+                        }
+                    }
+                },
+                {
+                    "name": "rhs",
+                    "type": {
+                        "defined": {
+                            "name": "Euint64"
+                        }
+                    }
+                }
+            ],
+            "returns": {
+                "defined": {
+                    "name": "Euint64"
+                }
+            }
+        },
+        {
+            "name": "sub",
+            "discriminator": [
+                24,
+                41,
+                208,
+                39,
+                211,
+                133,
+                97,
+                210
+            ],
+            "accounts": [
+                {
+                    "name": "executor",
+                    "writable": true
+                }
+            ],
+            "args": [
+                {
+                    "name": "lhs",
+                    "type": {
+                        "defined": {
+                            "name": "Euint64"
+                        }
+                    }
+                },
+                {
+                    "name": "rhs",
+                    "type": {
+                        "defined": {
+                            "name": "Euint64"
+                        }
+                    }
+                }
+            ],
+            "returns": {
+                "defined": {
+                    "name": "Euint64"
+                }
+            }
+        },
+        {
+            "name": "to_euint64",
+            "discriminator": [
+                87,
+                7,
+                163,
+                69,
+                244,
+                217,
+                20,
+                74
+            ],
+            "accounts": [
+                {
+                    "name": "executor",
+                    "writable": true
+                }
+            ],
+            "args": [
+                {
+                    "name": "value",
+                    "type": "u128"
+                }
+            ],
+            "returns": {
+                "defined": {
+                    "name": "Euint64"
+                }
+            }
+        }
+    ],
+    "accounts": [
+        {
+            "name": "AccountData",
+            "discriminator": [
+                23,
+                205,
+                88,
+                172,
+                233,
+                226,
+                180,
+                239
+            ]
+        }
+    ],
+    "errors": [
+        {
+            "code": 6000,
+            "name": "UnsupportedType",
+            "msg": "Unsupported type"
+        },
+        {
+            "code": 6001,
+            "name": "IncompatibleTypes",
+            "msg": "Incompatible types for lhs and rhs"
+        }
+    ],
+    "types": [
+        {
+            "name": "AccountData",
+            "type": {
+                "kind": "struct"
+            }
+        },
+        {
+            "name": "Ebool",
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "handle",
+                        "type": "u128"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "Einput",
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "handle",
+                        "type": "u128"
+                    },
+                    {
+                        "name": "proof",
+                        "type": "bytes"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "Euint64",
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "handle",
+                        "type": "u128"
+                    }
+                ]
+            }
+        }
+    ]
+}

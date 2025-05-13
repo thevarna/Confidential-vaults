@@ -1,0 +1,489 @@
+{
+    "address": "EgvZcun7jwa2rXUYGyeTYp9BVRTmf4n3TAcDC2C2FfmP",
+    "metadata": {
+        "name": "etoken",
+        "version": "0.1.0",
+        "spec": "0.1.0",
+        "description": "Created with Anchor"
+    },
+    "instructions": [
+        {
+            "name": "_transfer",
+            "discriminator": [
+                189,
+                221,
+                219,
+                225,
+                240,
+                148,
+                94,
+                147
+            ],
+            "accounts": [
+                {
+                    "name": "from",
+                    "writable": true
+                },
+                {
+                    "name": "to",
+                    "writable": true
+                },
+                {
+                    "name": "authority",
+                    "signer": true
+                },
+                {
+                    "name": "executor",
+                    "writable": true
+                },
+                {
+                    "name": "pet_executor_program",
+                    "address": "65veyWr4M57qBv83ZFD79LXT5DyovxMgdDZLzApR3oCK"
+                }
+            ],
+            "args": [
+                {
+                    "name": "amount",
+                    "type": {
+                        "defined": {
+                            "name": "Euint64"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "burn",
+            "discriminator": [
+                116,
+                110,
+                29,
+                56,
+                107,
+                219,
+                42,
+                93
+            ],
+            "accounts": [
+                {
+                    "name": "mint",
+                    "writable": true
+                },
+                {
+                    "name": "token_account",
+                    "writable": true
+                },
+                {
+                    "name": "authority",
+                    "signer": true
+                },
+                {
+                    "name": "executor",
+                    "writable": true
+                },
+                {
+                    "name": "pet_executor_program",
+                    "address": "65veyWr4M57qBv83ZFD79LXT5DyovxMgdDZLzApR3oCK"
+                }
+            ],
+            "args": [],
+            "returns": {
+                "defined": {
+                    "name": "Euint64"
+                }
+            }
+        },
+        {
+            "name": "etransfer",
+            "discriminator": [
+                150,
+                232,
+                199,
+                64,
+                71,
+                102,
+                119,
+                7
+            ],
+            "accounts": [
+                {
+                    "name": "from",
+                    "writable": true
+                },
+                {
+                    "name": "to",
+                    "writable": true
+                },
+                {
+                    "name": "authority",
+                    "signer": true
+                },
+                {
+                    "name": "executor",
+                    "writable": true
+                },
+                {
+                    "name": "pet_executor_program",
+                    "address": "65veyWr4M57qBv83ZFD79LXT5DyovxMgdDZLzApR3oCK"
+                }
+            ],
+            "args": [
+                {
+                    "name": "amount",
+                    "type": {
+                        "defined": {
+                            "name": "Einput"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "freeze_account",
+            "discriminator": [
+                253,
+                75,
+                82,
+                133,
+                167,
+                238,
+                43,
+                130
+            ],
+            "accounts": [
+                {
+                    "name": "token_account",
+                    "writable": true
+                },
+                {
+                    "name": "mint"
+                },
+                {
+                    "name": "authority",
+                    "signer": true
+                }
+            ],
+            "args": []
+        },
+        {
+            "name": "initialize_account",
+            "discriminator": [
+                74,
+                115,
+                99,
+                93,
+                197,
+                69,
+                103,
+                7
+            ],
+            "accounts": [
+                {
+                    "name": "token_account",
+                    "writable": true,
+                    "signer": true
+                },
+                {
+                    "name": "mint"
+                },
+                {
+                    "name": "payer",
+                    "writable": true,
+                    "signer": true
+                },
+                {
+                    "name": "authority",
+                    "signer": true
+                },
+                {
+                    "name": "system_program",
+                    "address": "11111111111111111111111111111111"
+                }
+            ],
+            "args": []
+        },
+        {
+            "name": "initialize_mint",
+            "discriminator": [
+                209,
+                42,
+                195,
+                4,
+                129,
+                85,
+                209,
+                44
+            ],
+            "accounts": [
+                {
+                    "name": "mint",
+                    "writable": true,
+                    "signer": true
+                },
+                {
+                    "name": "payer",
+                    "writable": true,
+                    "signer": true
+                },
+                {
+                    "name": "system_program",
+                    "address": "11111111111111111111111111111111"
+                }
+            ],
+            "args": [
+                {
+                    "name": "decimals",
+                    "type": "u8"
+                },
+                {
+                    "name": "mint_authority",
+                    "type": "pubkey"
+                }
+            ]
+        },
+        {
+            "name": "mint_to",
+            "discriminator": [
+                241,
+                34,
+                48,
+                186,
+                37,
+                179,
+                123,
+                192
+            ],
+            "accounts": [
+                {
+                    "name": "mint",
+                    "writable": true
+                },
+                {
+                    "name": "token_account",
+                    "writable": true
+                },
+                {
+                    "name": "authority",
+                    "signer": true
+                },
+                {
+                    "name": "executor",
+                    "writable": true
+                },
+                {
+                    "name": "pet_executor_program",
+                    "address": "65veyWr4M57qBv83ZFD79LXT5DyovxMgdDZLzApR3oCK"
+                }
+            ],
+            "args": [
+                {
+                    "name": "amount",
+                    "type": "u64"
+                }
+            ]
+        }
+    ],
+    "accounts": [
+        {
+            "name": "AccountData",
+            "discriminator": [
+                23,
+                205,
+                88,
+                172,
+                233,
+                226,
+                180,
+                239
+            ]
+        },
+        {
+            "name": "Mint",
+            "discriminator": [
+                80,
+                188,
+                245,
+                20,
+                95,
+                138,
+                57,
+                156
+            ]
+        },
+        {
+            "name": "TokenAccount",
+            "discriminator": [
+                220,
+                131,
+                236,
+                16,
+                145,
+                206,
+                207,
+                54
+            ]
+        }
+    ],
+    "errors": [
+        {
+            "code": 6000,
+            "name": "AlreadyInitialized",
+            "msg": "Already initialized"
+        },
+        {
+            "code": 6001,
+            "name": "InvalidMintAuthority",
+            "msg": "Invalid mint authority"
+        },
+        {
+            "code": 6002,
+            "name": "InvalidFreezeAuthority",
+            "msg": "Invalid freeze authority"
+        },
+        {
+            "code": 6003,
+            "name": "InvalidOwner",
+            "msg": "Invalid owner"
+        },
+        {
+            "code": 6004,
+            "name": "MintFrozen",
+            "msg": "Mint is frozen"
+        },
+        {
+            "code": 6005,
+            "name": "AccountFrozen",
+            "msg": "Account is frozen"
+        },
+        {
+            "code": 6006,
+            "name": "InsufficientFunds",
+            "msg": "Insufficient funds"
+        },
+        {
+            "code": 6007,
+            "name": "Overflow",
+            "msg": "Arithmetic overflow"
+        },
+        {
+            "code": 6008,
+            "name": "ExceedsMaxSupply",
+            "msg": "Exceeds maximum supply"
+        },
+        {
+            "code": 6009,
+            "name": "TransferCooldown",
+            "msg": "Transfer cooldown period has not elapsed"
+        }
+    ],
+    "types": [
+        {
+            "name": "AccountData",
+            "type": {
+                "kind": "struct"
+            }
+        },
+        {
+            "name": "Einput",
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "handle",
+                        "type": "u128"
+                    },
+                    {
+                        "name": "proof",
+                        "type": "bytes"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "Euint64",
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "handle",
+                        "type": "u128"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "Mint",
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "mint_authority",
+                        "type": {
+                            "option": "pubkey"
+                        }
+                    },
+                    {
+                        "name": "supply",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "decimals",
+                        "type": "u8"
+                    },
+                    {
+                        "name": "is_initialized",
+                        "type": "bool"
+                    },
+                    {
+                        "name": "freeze_authority",
+                        "type": {
+                            "option": "pubkey"
+                        }
+                    },
+                    {
+                        "name": "is_frozen",
+                        "type": "bool"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "TokenAccount",
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "mint",
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "owner",
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "amount",
+                        "type": {
+                            "defined": {
+                                "name": "Euint64"
+                            }
+                        }
+                    },
+                    {
+                        "name": "delegate",
+                        "type": {
+                            "option": "pubkey"
+                        }
+                    },
+                    {
+                        "name": "is_initialized",
+                        "type": "bool"
+                    },
+                    {
+                        "name": "is_frozen",
+                        "type": "bool"
+                    }
+                ]
+            }
+        }
+    ]
+}

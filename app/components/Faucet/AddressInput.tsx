@@ -1,17 +1,17 @@
 import React, { useEffect } from 'react';
-import { useAccount } from 'wagmi';
+import { useWallet } from '@solana/wallet-adapter-react';
 
 const AddressInput: React.FC<{
 	address: string;
 	setAddress: (address: string) => void;
 }> = ({ address, setAddress }) => {
-	const { address: connectedAddress } = useAccount();
+	const { publicKey } = useWallet();
 
 	useEffect(() => {
-		if (connectedAddress) {
-			setAddress(connectedAddress);
+		if (publicKey) {
+			setAddress(publicKey.toBase58());
 		}
-	}, [connectedAddress, setAddress]);
+	}, [publicKey, setAddress]);
 
 	return (
 		<input

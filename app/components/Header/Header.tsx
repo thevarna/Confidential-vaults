@@ -5,8 +5,8 @@ import { useRef, useState } from 'react';
 import { CustomConnectButton } from '../ConnectButton/ConnectButton';
 import Logo from '../Logo/Logo';
 import Menu from './Menu';
-import { AddToNetworkButton } from '../AddToNetworkButton/AddToNetworkButton';
-import { useEncifherNetwork } from '@/app/hooks/useEncifherNetwork';
+// import { AddToNetworkButton } from '../AddToNetworkButton/AddToNetworkButton';
+// import { useEncifherNetwork } from '@/app/hooks/useEncifherNetwork';
 import { AnimatePresence, motion } from 'framer-motion';
 import { MenuSm } from './Menu';
 
@@ -19,7 +19,7 @@ export default function Header() {
 		visible: { x: 0 },
 		exit: { x: "100%", transition: { duration: 0.2, ease: "easeInOut" } },
 	};
-	const { isNetworkAdded, addEncifherNetworkConfig } = useEncifherNetwork();
+	// const { isNetworkAdded, addEncifherNetworkConfig } = useEncifherNetwork();
 
 	return (
 		<header className='px-4 m-auto md:m-0 md:px-12 z-40'>
@@ -32,7 +32,7 @@ export default function Header() {
 				</div>
 				<div className='flex flex-row items-center gap-4 hidden md:flex'>
 					<Menu />
-					<CustomConnectButton isNetworkAdded={isNetworkAdded || false} />
+					<CustomConnectButton isNetworkAdded={true} />
 					{/* {!isNetworkAdded && <AddToNetworkButton onAddNetwork={addEncifherNetworkConfig} />} */}
 				</div>
 				<AnimatePresence>

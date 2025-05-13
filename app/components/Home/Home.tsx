@@ -4,10 +4,9 @@ import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import UnderlinedText from '../UnderlinedText/UnderlinedText';
 import { useAccount } from 'wagmi';
-import { SwapWidget } from '../SwapWidget/SwapWidget';
 import CustomConnectButton from '../ConnectButton/ConnectButton';
-import { useEncifherNetwork } from '@/app/hooks/useEncifherNetwork';
-import InfoButton from '../Leaderboard/component/Info';
+// import { useEncifherNetwork } from '@/app/hooks/useEncifherNetwork';
+// import InfoButton from '../Leaderboard/component/Info';
 
 const Title = () => (
 	<motion.h1
@@ -18,7 +17,7 @@ const Title = () => (
 		transition={{ duration: 0.15, ease: 'easeOut' }}
 		className='max-w-3xl font-mono text-3xl antialiased text-center text-white uppercase cursor-default md:leading-tight font-regular md:text-6xl'
 	>
-		Swap<UnderlinedText>securely</UnderlinedText> with <br /> END-TO-END <UnderlinedText>privacy</UnderlinedText>
+		Swap<UnderlinedText> securely</UnderlinedText> with <br /> END-TO-END <UnderlinedText>privacy</UnderlinedText>
 	</motion.h1>
 );
 
@@ -42,7 +41,7 @@ const LoadingState = () => (
 
 export default function Home() {
 	const { isConnected } = useAccount();
-	const { isNetworkAdded } = useEncifherNetwork();
+	// const { isNetworkAdded } = useEncifherNetwork();
 	const [isConnectionReady, setIsConnectionReady] = useState(false);
 
 	useEffect(() => {
@@ -61,13 +60,13 @@ export default function Home() {
 
 	return (
 		<div className='flex flex-col items-center justify-between flex-1 px-4 py-16'>
-			<InfoButton />
+			{/* <InfoButton /> */}
 			<div className='z-10 flex flex-col items-center justify-between w-full'>
 				<AnimatePresence>{!isConnected && <Title />}</AnimatePresence>
 				<div className='mt-12'>
 					<AnimatePresence>{isConnected ? <>
 					<div className='flex items-center justify-center text-white/50 font-mono text-sm pt-3'>We take 0.05 MON fee for each swap</div>
-					</> : <ConnectButtonWrapper isNetworkAdded={isNetworkAdded} />}</AnimatePresence>
+					</> : <ConnectButtonWrapper isNetworkAdded={true} />}</AnimatePresence>
 				</div>
 			</div>
 		</div>

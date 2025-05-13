@@ -1,133 +1,61 @@
-import { ethers } from 'ethers';
-import { DECIMALS, eERC20Abi } from '@/lib/constants';
-import { encryptAmount } from '@/utils/fhevm';
-import { assets } from '@/utils/token';
-import { MongoClient } from 'mongodb';
-import { NextRequest } from 'next/server';
-import axios from 'axios';
-import { getServerSession, Session } from 'next-auth';
-
-const client = new MongoClient(process.env.MONGODB_URI!);
-
-const RATE_LIMIT_DURATION = 12 * 60 * 60 * 1000; // 6 hours in milliseconds
-
-const wallet = new ethers.Wallet(process.env.FAUCET_KEY as string);
-
-const refillWallet = new ethers.Wallet(process.env.REFILL_PRIVATE_KEY as string);
+import { NextRequest } from "next/server";
+import * as anchor from "@coral-xyz/anchor";
+import { Keypair, Transaction, PublicKey, sendAndConfirmTransaction } from "@solana/web3.js";
+import { EtokenIDL } from "@/app/idls";
+import { EMINT, EXECUTOR } from "@/lib/constants";
 
 type MintRequest = {
   address: string;
   value: string;
   selectedToken: string;
   networkUrl: string;
-  captcha: string;
 };
 
-interface CustomSession extends Session {
-  user: {
-    name: string;
-    email?: string;
-    image?: string;
-  };
-}
-
 export const maxDuration = 300;
+const payer = Keypair.fromSecretKey(Buffer.from(process.env.AUTHORITY!, 'base64'));
 
 export async function POST(req: NextRequest) {
-  const forwardedFor = req.headers.get('x-forwarded-for');
-  const clientIp = req.ip ?? (forwardedFor && forwardedFor.split(',')[0].trim()) ?? req.headers.get('host');
 
-  if (!clientIp) {
-    return new Response(
-      JSON.stringify({ error: 'Could not determine client IP' }),
-      { status: 400, headers: { 'Content-Type': 'application/json' } }
-    );
-  }
-
-  const session = await getServerSession({ req } as any);
-  const typedSession = session as CustomSession;
-  if (!typedSession || !typedSession.user?.name) {
-    return new Response(
-      JSON.stringify({ error: 'Authentication required' }),
-      { status: 401, headers: { 'Content-Type': 'application/json' } }
-    );
-  }
-
-  const username = typedSession.user.name;
-  const currentTime = Date.now();
-
-  const db = (await client.connect()).db('rate-limit').collection('monad');
-  const user = await db.findOne({ ip: clientIp, username });
-
-  const lastClaimTime = user?.lastClaimTime;
-  if (lastClaimTime && currentTime - lastClaimTime < RATE_LIMIT_DURATION) {
-    const minutesLeft = Math.ceil((RATE_LIMIT_DURATION - (currentTime - lastClaimTime)) / 60000);
-    return new Response(
-      JSON.stringify({ error: `Rate limit exceeded. Try again in ${minutesLeft} minute(s).` }),
-      { status: 429, headers: { 'Content-Type': 'application/json' } }
-    );
-  }
-
-  const { address, value, selectedToken, networkUrl, captcha }: MintRequest = await req.json();
+  const { address, value, selectedToken, networkUrl }: MintRequest = await req.json();
   console.log('Minting', address, value, selectedToken, networkUrl);
+  const connection = new anchor.web3.Connection(networkUrl);
+  const wallet = new anchor.Wallet(payer);
+  const provider = new anchor.AnchorProvider(connection, wallet);
 
-  const tokenAddress = assets.find((asset) => asset.symbol === selectedToken)?.address;
-  if (!tokenAddress) {
-    return new Response(
-      JSON.stringify({ error: 'Invalid token' }),
-      { status: 400, headers: { 'Content-Type': 'application/json' } }
-    );
-  }
+  const etokenProgram = new anchor.Program(EtokenIDL, provider);
 
   try {
-    const eAmountIn = await encryptAmount(
-      tokenAddress,
-      ethers.parseUnits("5", DECIMALS),
-      tokenAddress
-    );
-
-    const contract = new ethers.Contract(tokenAddress, eERC20Abi, wallet);
-    const provider = new ethers.JsonRpcProvider(networkUrl);
-    const walletWithProvider = wallet.connect(provider);
-    const refillWalletWithProvider = refillWallet.connect(provider);
-
-    // const tx = await walletWithProvider.sendTransaction({
-    //   to: tokenAddress,
-    //   data: contract.interface.encodeFunctionData(
-    //     'transfer(address,bytes32,bytes)',
-    //     [address, eAmountIn.handles[0], eAmountIn.inputProof]
-    //   ),
-    // });
-    // await tx.wait();
-
-    const refillTx = await refillWalletWithProvider.sendTransaction({
-      to: tokenAddress,
-      data: contract.interface.encodeFunctionData(
-        'mint(address,uint32)',
-        [address, 5000000]
-      ),
-    });
-    await refillTx.wait();
-
-    if (user) {
-      await db.updateOne(
-        { ip: clientIp, username },
-        {
-          $set: {
-            lastClaimTime: currentTime,
-          },
-        }
-      );
-    } else {
-      await db.insertOne({
-        ip: clientIp,
-        username,
-        lastClaimTime: currentTime,
-      });
+    const userEusdcTokenAccount = Keypair.fromSeed(new PublicKey(address).toBuffer()); // This is just for demo purpose, ideally we would want to use PDAs
+    const userTokenAccountInfo = await connection.getAccountInfo(userEusdcTokenAccount.publicKey);
+    const tx = new Transaction();
+    if (!userTokenAccountInfo) {
+      try {
+        const ix = await etokenProgram.methods.initializeAccount().accounts({
+          tokenAccount: userEusdcTokenAccount.publicKey,
+          mint: EMINT,
+          payer: payer.publicKey,
+          authority: payer.publicKey,
+        }).signers([userEusdcTokenAccount]).instruction();
+        tx.add(ix);
+        tx.partialSign(userEusdcTokenAccount);
+      } catch (e) {
+        console.error('Error initializing account', e);
+        return;
+      }
     }
-
+    const amount = new anchor.BN(Number(value) * 10 ** 6);
+    const ix = await etokenProgram.methods.mintTo(amount)
+      .accounts({
+        mint: EMINT,
+        tokenAccount: userEusdcTokenAccount,
+        authority: payer.publicKey,
+        executor: EXECUTOR,
+      }).signers([payer]).instruction();
+    tx.add(ix);
+    tx.feePayer = payer.publicKey;
+    const txid = await sendAndConfirmTransaction(connection, tx, [payer], { commitment: 'processed' });
     return new Response(
-      JSON.stringify({ txid: refillTx.hash }),
+      JSON.stringify({ txid }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
   } catch (error: any) {

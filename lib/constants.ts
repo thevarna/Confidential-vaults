@@ -1,3 +1,7 @@
+export const ORDER_MANAGER = process.env.NEXT_PUBLIC_ORDER_MANAGER!;
+export const EXECUTOR = process.env.NEXT_PUBLIC_EXECUTOR!;
+export const EMINT = process.env.NEXT_PUBLIC_EMINT!;
+export const EUSDC_ACCOUNT = process.env.NEXT_PUBLIC_EUSDC_ACCOUNT!;
 export const DECIMALS = 6;
 export const addresses: { [key: string]: `0x${string}` } = {
   "USDC": process.env.NEXT_PUBLIC_USDC_ADDRESS as `0x${string}`, 

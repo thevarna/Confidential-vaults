@@ -6,7 +6,7 @@ import AddressWithCopy from "./AddressWithCopy";
 import Pageindex from "./Pageindex";
 import { useAccount } from "wagmi";
 import { client } from "@/utils/stackr";
-import InfoButton from "./component/Info";
+// import InfoButton from "./component/Info";
 
 type point = { rank: number; address: string; points: number };
 
@@ -70,7 +70,7 @@ const Leaderboard = () => {
       <div className="flex flex-row items-center text-white justify-between w-full gap-2 md:gap-0">
         <h1 className="flex flex-col md:flex-row justify-center items-center text-[20px] md:text-[24px] font-bold text-[#D0D0D0]">
           LEADERBOARD
-          <InfoButton />
+          {/* <InfoButton /> */}
         </h1>
         <Searchbar setSearchTerm={setSearchTerm} />
       </div>

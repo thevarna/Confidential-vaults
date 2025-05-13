@@ -8,16 +8,10 @@ import AddressInput from './AddressInput';
 import ClaimButton from './ClaimButton';
 import FaucetHeader from './FaucetHeader';
 import { Token, FaucetSuccessType } from './types';
-import { useAccount } from 'wagmi';
 import CustomConnectButton from '../ConnectButton/ConnectButton';
 import UnderlinedText from '../UnderlinedText/UnderlinedText';
-import { client } from '@/utils/pointy';
 import { useSession, signIn } from 'next-auth/react';
-import SHMonadHeader from './SHMonadHeader';
-import { ethers, JsonRpcProvider } from 'ethers';
-import { writeContract } from 'wagmi/actions';
-import { config } from '@/lib/config';
-import { eERC20Abi, encifherERC20Abi } from '@/lib/constants';
+import { useWallet } from '@solana/wallet-adapter-react';
 
 const Title = () => (
   <motion.h1
@@ -61,39 +55,36 @@ const tokens: Token[] = [
 ];
 
 const FaucetContent: React.FC = () => {
-  const { chain } = useAccount();
-  const { data: session, status: sessionStatus } = useSession();
+  // const { data: session, status: sessionStatus } = useSession();
   const [address, setAddress] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [selectedToken, setSelectedToken] = useState(tokens[0].symbol);
   const [status, setStatus] = useState('');
-  const [wrapAmount, setWrapAmount] = useState<number>(0);
-  const [wrapperloading, setWrapperLoading] = useState(false);
   const [success, setSuccess] = useState<FaucetSuccessType>({
     isSuccessful: false,
     encifher_txid: undefined,
     error: undefined,
   });
 
-  // Handle session loading state
-  if (sessionStatus === 'loading') {
-    return <LoadingState />;
-  }
+  // // Handle session loading state
+  // if (sessionStatus === 'loading') {
+  //   return <LoadingState />;
+  // }
 
-  // If the user is not authenticated, prompt for sign-in
-  if (!session) {
-    return (
-      <div className="flex flex-col w-full h-full items-center justify-center">
-        <p className="mb-4 font-mono text-white">Please sign in with Twitter to access the faucet.</p>
-        <button
-          onClick={() => signIn('twitter')}
-          className=" text-white font-mono bg-primary-brand hover:bg-primary-brand/90 px-4 py-2 rounded-lg shadow-lg"
-        >
-          Sign in with Twitter
-        </button>
-      </div>
-    );
-  }
+  // // If the user is not authenticated, prompt for sign-in
+  // if (!session) {
+  //   return (
+  //     <div className="flex flex-col w-full h-full items-center justify-center">
+  //       <p className="mb-4 font-mono text-white">Please sign in with Twitter to access the faucet.</p>
+  //       <button
+  //         onClick={() => signIn('twitter')}
+  //         className=" text-white font-mono bg-primary-brand hover:bg-primary-brand/90 px-4 py-2 rounded-lg shadow-lg"
+  //       >
+  //         Sign in with Twitter
+  //       </button>
+  //     </div>
+  //   );
+  // }
 
   // Mint tokens and handle errors
   const mint = async () => {
@@ -110,7 +101,7 @@ const FaucetContent: React.FC = () => {
             address,
             value: token.value,
             selectedToken: token.symbol,
-            networkUrl: process.env.NEXT_PUBLIC_MONAD_RPC_URL,
+            networkUrl: process.env.NEXT_PUBLIC_RPC_URL!,
           }),
         });
 
@@ -127,7 +118,7 @@ const FaucetContent: React.FC = () => {
         toast.success(`Successfully claimed ${token.symbol}`, defaultToast);
       }
 
-      client.logEvent({ event: 'faucet_claim', user: address });
+      // client.logEvent({ event: 'faucet_claim', user: address });
       setSuccess({ isSuccessful: true, encifher_txid: tx_id, error: undefined });
       setLoading(false);
       toast.custom(
@@ -143,7 +134,7 @@ const FaucetContent: React.FC = () => {
               Transaction ID: {tx_id.slice(0, 5)}...{tx_id.slice(-3)}
             </p>
             <button
-              onClick={() => window.open(`${chain?.blockExplorers?.default?.url}/tx/${tx_id}`, '_blank')}
+              onClick={() => window.open(`https://solscan.io/tx/${tx_id}?cluster=devnet`, '_blank')}
               className="mt-2 bg-primary-brand/20 text-primary-brand-light px-3 py-1 rounded text-xs hover:bg-primary-brand/30 transition-colors duration-200"
             >
               View on Explorer
@@ -175,7 +166,7 @@ const FaucetContent: React.FC = () => {
       <FaucetHeader />
       <div className="flex flex-col">
         <div className="px-6 py-4">
-          <span className="text-xs text-white/40 font-mono">{session.user?.name}</span>
+          {/* <span className="text-xs text-white/40 font-mono">{session.user?.name}</span> */}
           <AddressInput address={address} setAddress={setAddress} />
         </div>
         <div className="px-6 py-4 flex justify-between bg-black/20">
@@ -201,7 +192,7 @@ const FaucetContent: React.FC = () => {
 };
 
 const Faucet: React.FC = () => {
-  const { isConnected } = useAccount();
+  const { connected } = useWallet();
   const [isConnectionReady, setIsConnectionReady] = useState(false);
 
   useEffect(() => {
@@ -221,9 +212,9 @@ const Faucet: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-between flex-1 px-4 py-16">
       <div className="z-10 flex flex-col items-center justify-between w-full">
-        <AnimatePresence>{!isConnected && <Title />}</AnimatePresence>
+        <AnimatePresence>{!connected && <Title />}</AnimatePresence>
         <div className="mt-12">
-          <AnimatePresence>{isConnected ? <FaucetContent /> : <ConnectButtonWrapper />}</AnimatePresence>
+          <AnimatePresence>{connected ? <FaucetContent /> : <ConnectButtonWrapper />}</AnimatePresence>
         </div>
       </div>
     </div>
