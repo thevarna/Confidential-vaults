@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useOrderPlacement } from '@/app/hooks/usePlaceOrder';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { PublicKey } from '@solana/web3.js'
@@ -25,8 +25,8 @@ const handleVisibilityToggle = (isVisible: boolean, setVisibility: React.Dispatc
 
 const DepositModal = ({ isOpen, onClose, userBalance, loadBalances }: DepositModalProps) => {
     if (!isOpen) return null;
-    const [amount, setAmount] = useState<string>('5');
-    const [txHash, setTxHash] = useState<string>("");
+    const [amount, setAmount] = useState<string>('1');
+    const [hash, setTxHash] = useState<string>("");
     const [visibility, setVisibility] = useState(false);
     const { publicKey } = useWallet();
     const { connection } = useConnection();
@@ -38,6 +38,11 @@ const DepositModal = ({ isOpen, onClose, userBalance, loadBalances }: DepositMod
         executor: new PublicKey(EXECUTOR),
         orderManager: new PublicKey(ORDER_MANAGER),
     });
+
+    useEffect(() => {
+        if (isOpen)
+            loadBalances()
+    }, [isOpen])
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
@@ -90,9 +95,18 @@ const DepositModal = ({ isOpen, onClose, userBalance, loadBalances }: DepositMod
                     <button
                         className='rounded-b-md px-4 py-2 w-full font-mono text-sm uppercase border text-primary-brand-light bg-primary-brand/15 border-primary-brand/25 backdrop-blur-sm hover:bg-primary-brand/25 transition-all duration-300'
                         onClick={async () => {
+                            if (hash || error) return;
+                            if (Number(userBalance) == 0 || Number(userBalance) < Number(amount)) {
+                                toast.error("Insufficent balance", {
+                                    ...defaultToast,
+                                    position: 'bottom-right'
+                                });
+                                return;
+                            }
                             const txHash = await placeOrders(amount);
-                            setTxHash(txHash || "");
-                            loadBalances();
+                            if (!txHash) return;
+                            setTxHash(txHash);
+                            setTimeout(() => loadBalances(), 500);
                             toast.custom(
                                 (t) => (
                                     <div className="font-mono text-sm text-primary-brand-light bg-primary-brand/15 border border-primary-brand/25 backdrop-blur-sm p-4 rounded-lg shadow-lg">
@@ -117,7 +131,7 @@ const DepositModal = ({ isOpen, onClose, userBalance, loadBalances }: DepositMod
                             );
                         }}
                     >
-                        {isLoading ? "Depositing..." : error ? "Error deposting" : txHash ? "Deposited" : "Deposit"}
+                        {isLoading ? "Depositing..." : (!hash && error) ? "Error deposting" : hash ? "Deposit Complete" : "Deposit"}
                     </button>
                 </div>
             </div>

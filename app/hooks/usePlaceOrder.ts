@@ -86,7 +86,7 @@ export const useOrderPlacement = ({
             tx.feePayer = publicKey;
             tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
             const signedTx = await wallet.signTransaction(tx);
-            const hash = await connection.sendRawTransaction(signedTx.serialize());
+            const hash = await connection.sendRawTransaction(signedTx.serialize(), { skipPreflight: true });
             setIsLoading(false);
             return hash;
         } catch (err) {

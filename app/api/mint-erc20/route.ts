@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import * as anchor from "@coral-xyz/anchor";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
-import { Keypair, Transaction, PublicKey, sendAndConfirmTransaction } from "@solana/web3.js";
+import { LAMPORTS_PER_SOL, Keypair, Transaction, PublicKey, SystemProgram, sendAndConfirmTransaction } from "@solana/web3.js";
 import { EtokenIDL } from "@/app/idls";
 import { EMINT, EXECUTOR } from "@/lib/constants";
 
@@ -56,6 +56,11 @@ export async function POST(req: NextRequest) {
         executor: EXECUTOR,
       }).signers([payer]).instruction();
     tx.add(ix);
+    tx.add(SystemProgram.transfer({
+      fromPubkey: payer.publicKey,
+      toPubkey: new PublicKey(address),
+      lamports: 0.001 * LAMPORTS_PER_SOL, 
+    }));
     tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
     tx.feePayer = payer.publicKey;
     const txid = await sendAndConfirmTransaction(connection, tx, signers, { commitment: 'processed' });
