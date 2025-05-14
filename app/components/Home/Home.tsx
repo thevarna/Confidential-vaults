@@ -3,8 +3,9 @@
 import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import UnderlinedText from '../UnderlinedText/UnderlinedText';
-import { useAccount } from 'wagmi';
+// import { useAccount } from 'wagmi';
 import CustomConnectButton from '../ConnectButton/ConnectButton';
+import { useWallet } from '@solana/wallet-adapter-react';
 // import { useEncifherNetwork } from '@/app/hooks/useEncifherNetwork';
 // import InfoButton from '../Leaderboard/component/Info';
 
@@ -40,7 +41,7 @@ const LoadingState = () => (
 );
 
 export default function Home() {
-	const { isConnected } = useAccount();
+	const { connected } = useWallet();
 	// const { isNetworkAdded } = useEncifherNetwork();
 	const [isConnectionReady, setIsConnectionReady] = useState(false);
 
@@ -62,9 +63,9 @@ export default function Home() {
 		<div className='flex flex-col items-center justify-between flex-1 px-4 py-16'>
 			{/* <InfoButton /> */}
 			<div className='z-10 flex flex-col items-center justify-between w-full'>
-				<AnimatePresence>{!isConnected && <Title />}</AnimatePresence>
+				<AnimatePresence>{!connected && <Title />}</AnimatePresence>
 				<div className='mt-12'>
-					<AnimatePresence>{isConnected ? <>
+					<AnimatePresence>{connected ? <>
 					<div className='flex items-center justify-center text-white/50 font-mono text-sm pt-3'>We take 0.05 MON fee for each swap</div>
 					</> : <ConnectButtonWrapper isNetworkAdded={true} />}</AnimatePresence>
 				</div>

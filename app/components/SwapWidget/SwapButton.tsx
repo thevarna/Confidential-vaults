@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAccount } from 'wagmi'
+// import { useAccount } from 'wagmi'
 
 interface SwapButtonProps {
 	fromAmount: string;
@@ -11,7 +11,7 @@ interface SwapButtonProps {
 }
 
 export const SwapButton: React.FC<SwapButtonProps> = ({ fromAmount, toAmount, onClick, isLoading, stateText, txHash }) => {
-	const { chain } = useAccount();
+	// const { chain } = useAccount();
 	if (!fromAmount || !toAmount) {
 		return (
 			<button className='w-full py-4 rounded-b-lg font-medium font-mono bg-zinc-900 uppercase text-zinc-500' disabled>
@@ -23,7 +23,7 @@ export const SwapButton: React.FC<SwapButtonProps> = ({ fromAmount, toAmount, on
 	if (txHash) {
 		return (
 			<a
-				href={`${chain?.blockExplorers?.default?.url}/tx/${txHash}`}
+				// href={`${chain?.blockExplorers?.default?.url}/tx/${txHash}`}
 				target='_blank'
 				rel='noopener noreferrer'
 				className='w-full py-4 rounded-b-lg font-medium text-white uppercase font-mono bg-primary-brand hover:bg-primary-brand/90 text-center block'

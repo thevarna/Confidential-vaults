@@ -7,7 +7,7 @@ import { useEffect, useState } from "react"
 // import { useAccount } from "wagmi"
 import Image from "next/image"
 // import { writeContract } from "wagmi/actions"
-import { config } from "@/lib/config"
+// import { config } from "@/lib/config"
 import { eerc20WrapperAbi, encifherERC20Abi } from "@/lib/constants"
 import { toast } from "sonner"
 import { ChevronRightIcon } from "@heroicons/react/24/outline"
@@ -15,7 +15,7 @@ import { ChevronRightIcon } from "@heroicons/react/24/outline"
 const headers = ["Token name", "Price", "Amount", "USD value", "Encrypt"]
 
 export default function ERC20Table() {
-    const { tokenPrices, normalBalances } = useAsync()
+    // const { tokenPrices, normalBalances } = useAsync()
     const [monValue, setMonValue] = useState("0")
     // Global state to ensure only one wrapping tx is processed at a time.
     const [txInProgress, setTxInProgress] = useState(false)
@@ -174,11 +174,11 @@ export default function ERC20Table() {
                     <span>{asset.symbol}</span>
                 </div>
             ),
-            tokenPrices[i] ? `$${Number(tokenPrices[i]).toFixed(3)}` : "N/A",
-            normalBalances[i] ? Number(normalBalances[i]).toFixed(3) : "N/A",
-            tokenPrices[i] && normalBalances[i]
-                ? `$${(Number(tokenPrices[i]) * Number(normalBalances[i])).toFixed(3)}`
-                : "N/A",
+            // tokenPrices[i] ? `$${Number(tokenPrices[i]).toFixed(3)}` : "N/A",
+            // normalBalances[i] ? Number(normalBalances[i]).toFixed(3) : "N/A",
+            // tokenPrices[i] && normalBalances[i]
+            //     ? `$${(Number(tokenPrices[i]) * Number(normalBalances[i])).toFixed(3)}`
+            //     : "N/A",
             <div className="flex items-center justify-center gap-2" key={`encrypt-${i}`}>
                 <EncryptCell
                     tokenSymbol={asset.symbol}

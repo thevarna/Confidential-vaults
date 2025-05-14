@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { metamaskConfig } from '@/lib/config';
+// import { metamaskConfig } from '@/lib/config';
 import { toast } from 'sonner';
 import { errorToast, successToast } from '@/utils/toastStyles';
 import { useSyncProviders } from '@/app/hooks/useSyncProvider';
@@ -15,7 +15,7 @@ export const useEncifherNetwork = () => {
 				try {
 					await metamaskProvider?.provider.request({ method: 'eth_chainId' }).then(
 						(chainId) => {
-							setIsNetworkAdded(chainId === metamaskConfig.params[0].chainId)
+							// setIsNetworkAdded(chainId === metamaskConfig.params[0].chainId)
 						}
 					);
 				} catch (error) {
@@ -36,9 +36,9 @@ export const useEncifherNetwork = () => {
 	const addEncifherNetworkConfig = async () => {
 		try {
 			if (metamaskProvider?.provider) {
-				await metamaskProvider?.provider.request(metamaskConfig).then(
-					() => setIsNetworkAdded(true)
-				)
+				// await metamaskProvider?.provider.request(metamaskConfig).then(
+					// () => setIsNetworkAdded(true)
+				// )
 				toast.success('Encifher network added to MetaMask successfully', successToast);
 			} else {
 				toast.error('Injected ethereum not found', errorToast);

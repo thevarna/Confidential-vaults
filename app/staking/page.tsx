@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useAccount } from 'wagmi';
+// import { useAccount } from 'wagmi';
 import CustomConnectButton from '../components/ConnectButton/ConnectButton';
 import UnderlinedText from '../components/UnderlinedText/UnderlinedText';
 import Staking from '../components/Staking/Staking';
+import { useWallet } from '@solana/wallet-adapter-react';
 
 const Title = () => (
 	<motion.h1
@@ -39,7 +40,7 @@ const LoadingState = () => (
 );
 
 export default function Page() {
-	const { isConnected } = useAccount();
+	const { connected } = useWallet();
 	const [isConnectionReady, setIsConnectionReady] = useState(false);
 
 	useEffect(() => {
@@ -59,9 +60,9 @@ export default function Page() {
 	return (
 		<div className='flex flex-col items-center justify-between flex-1 px-4 py-16'>
 			<div className='z-10 flex flex-col items-center justify-between w-full'>
-				<AnimatePresence>{!isConnected && <Title />}</AnimatePresence>
+				<AnimatePresence>{!connected && <Title />}</AnimatePresence>
 				<div className='mt-12'>
-					<AnimatePresence>{isConnected ? <Staking /> : <ConnectButtonWrapper />}</AnimatePresence>
+					<AnimatePresence>{connected ? <Staking /> : <ConnectButtonWrapper />}</AnimatePresence>
 				</div>
 			</div>
 		</div>

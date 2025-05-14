@@ -7,7 +7,7 @@ import { useEffect, useState } from "react"
 // import { useAccount, useWalletClient } from "wagmi"
 import Image from "next/image"
 // import { writeContract } from "wagmi/actions"
-import { config } from "@/lib/config"
+// import { config } from "@/lib/config"
 import { eERC20Abi, eerc20WrapperAbi } from "@/lib/constants"
 import { toast } from "sonner"
 import { PlaintextType, TEEClient } from "@encifher-js/core"
@@ -18,7 +18,7 @@ import { ChevronRightIcon } from "@heroicons/react/24/outline";
 const headers = ["Token name", "Price", "Amount", "USD value", "Decrypt"]
 
 export default function AssetTable() {
-    const { tokenPrices, decryptedBalances } = useAsync()
+    // const { tokenPrices, decryptedBalances } = useAsync()
     const [monValue, setMonValue] = useState("0")
     const [txInProgress, setTxInProgress] = useState(false)
 
@@ -194,11 +194,11 @@ export default function AssetTable() {
                     <span>{asset.symbol}</span>
                 </div>
             ),
-            tokenPrices[i] ? `$${Number(tokenPrices[i]).toFixed(3)}` : "N/A",
-            decryptedBalances[i] ? Number(decryptedBalances[i]).toFixed(3) : "N/A",
-            tokenPrices[i] && decryptedBalances[i]
-                ? `$${(Number(tokenPrices[i]) * Number(decryptedBalances[i])).toFixed(3)}`
-                : "N/A",
+            // tokenPrices[i] ? `$${Number(tokenPrices[i]).toFixed(3)}` : "N/A",
+            // decryptedBalances[i] ? Number(decryptedBalances[i]).toFixed(3) : "N/A",
+            // tokenPrices[i] && decryptedBalances[i]
+            //     ? `$${(Number(tokenPrices[i]) * Number(decryptedBalances[i])).toFixed(3)}`
+            //     : "N/A",
             (
                 <div key={i} className="flex items-center gap-2">
                     <EncryptCell

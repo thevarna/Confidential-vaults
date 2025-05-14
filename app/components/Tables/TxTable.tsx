@@ -22,7 +22,7 @@ export default function TxTable() {
     const [transactions, setTransactions] = useState<Tx[]>([])
     const [loading, setLoading] = useState<boolean>(true)
     // const { address, chain } = useAccount();
-    const { tokenPrices } = useAsync()
+    // const { tokenPrices } = useAsync()
 
     // useEffect(() => {
     //     const fetchTransactions = async () => {
@@ -94,7 +94,7 @@ export default function TxTable() {
                     <img src={tx?.icon} alt={tx?.name} className="w-5 h-5" />
                     <span>{tx?.name}</span>
                 </div>),
-                tokenPrices[tx?.tokenId] ? `$${Number(tokenPrices[tx?.tokenId])?.toFixed(3)}` : "N/A",
+                // tokenPrices[tx?.tokenId] ? `$${Number(tokenPrices[tx?.tokenId])?.toFixed(3)}` : "N/A",
                 tx?.amount ? Number(tx?.amount)?.toFixed(3) : "N/A",
                 (<div className="flex items-center justify-center gap-2">
                     <img src={tx?.isReceive ? "/greenarrow.svg" : "/redarrow.svg"} alt="arrow" className="w-2 h-2" />

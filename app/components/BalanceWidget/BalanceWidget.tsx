@@ -48,14 +48,14 @@ const Body = () => {
             copy[index] = !copy[index];
             return copy;
         });
-        fetchBalance(assets[index].address);
+        // fetchBalance(assets[index].address);
     }
 
     const decryptAll = async () => {
         setLoading(true);
         setStatus('Decrypting...');
         await Promise.all(assets.map(async (asset) => {
-            await fetchBalance(asset.address);
+            // await fetchBalance(asset.address);
         }));
         setStatus('Decrypted'); 
         setLoading(false);

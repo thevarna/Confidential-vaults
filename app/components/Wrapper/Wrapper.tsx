@@ -8,15 +8,16 @@ import Button from "./Button";
 import Dropdown from './Dropdown';
 import AddressInput from './AddressInput';
 import Checkbox from './Checkbox';
-import { useAccount } from 'wagmi';
-import { getBalance } from '@wagmi/core'
-import { writeContract, waitForTransactionReceipt } from "wagmi/actions";
+// import { useAccount } from 'wagmi';
+// import { getBalance } from '@wagmi/core'
+// import { writeContract, waitForTransactionReceipt } from "wagmi/actions";
 import { toast } from 'sonner';
-import { config } from "@/lib/config";
+// import { config } from "@/lib/config";
 import { defaultToast } from '@/utils/toastStyles';
-import { parseEther } from "ethers";
+// import { parseEther } from "ethers";
 import { encifherERC20Abi, eerc20WrapperAbi } from "@/lib/constants";
 import { erc20Assets as tokens } from "@/utils/token";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 const Title = () => (
     <motion.h1
@@ -58,7 +59,7 @@ const Body = () => {
     const [checked, setChecked] = useState<boolean>(false);
     const [txHash, setTxHash] = useState<string>('');
 
-    const { address: userAddress } = useAccount();
+    // const { address: userAddress } = useAccount();
 
     const onSuccess = () => {
         toast.success('Swap successful!', {
@@ -68,53 +69,53 @@ const Body = () => {
     }
 
     const handleWrap = async () => {
-        const tokenAddress: `0x${string}` = tokens.find((token) => token.symbol === selectedToken)?.address as `0x${string}`;
-        const wrapperAddress: `0x${string}` = tokens.find((token) => token.symbol === selectedToken)?.wrapper as `0x${string}`;
-        try {
-            if (!tokenAddress || !wrapperAddress) throw new Error('Token not found!');
-            if (!amount) throw new Error('Amount is required!');
-            setLoading(true);
-            const balance = await getBalance(config, {
-                address: userAddress as `0x${string}`,
-                token: tokenAddress,
-            });
-            if (balance.value < parseEther(amount)) throw new Error('Insufficient balance!');
-            // wrap token
-            setStatus('Taking approval...');
-            let hash = await writeContract(config, {
-                address: tokenAddress,
-                abi: encifherERC20Abi,
-                functionName: "approve",
-                args: [wrapperAddress, Number(amount)],
-            });
-            let receipt = await waitForTransactionReceipt(config, { hash });
-            if (!receipt.status) throw new Error('Transaction reverted!');
+        // const tokenAddress: `0x${string}` = tokens.find((token) => token.symbol === selectedToken)?.address as `0x${string}`;
+        // const wrapperAddress: `0x${string}` = tokens.find((token) => token.symbol === selectedToken)?.wrapper as `0x${string}`;
+        // try {
+        //     if (!tokenAddress || !wrapperAddress) throw new Error('Token not found!');
+        //     if (!amount) throw new Error('Amount is required!');
+        //     setLoading(true);
+        //     const balance = await getBalance(config, {
+        //         address: userAddress as `0x${string}`,
+        //         token: tokenAddress,
+        //     });
+        //     if (balance.value < parseEther(amount)) throw new Error('Insufficient balance!');
+        //     // wrap token
+        //     setStatus('Taking approval...');
+        //     let hash = await writeContract(config, {
+        //         address: tokenAddress,
+        //         abi: encifherERC20Abi,
+        //         functionName: "approve",
+        //         args: [wrapperAddress, Number(amount)],
+        //     });
+        //     let receipt = await waitForTransactionReceipt(config, { hash });
+        //     if (!receipt.status) throw new Error('Transaction reverted!');
 
-            setStatus('Wrapping tokens...');
-            hash = await writeContract(config, {
-                address: wrapperAddress,
-                abi: eerc20WrapperAbi,
-                functionName: "depositAndWrap",
-                args: [userAddress, Number(amount)],
-            });
-            setStatus('Waiting for confirmation...');
-            receipt = await waitForTransactionReceipt(config, { hash });
-            setTxHash(hash);
-            if (receipt.status) {
-                onSuccess();
-            } else {
-                throw new Error('Transaction Reverted!');
-            }
-        }
-        catch (e: any) {
-            console.error(e);
-            toast.error(e.message, {
-                ...defaultToast,
-                position: 'bottom-right',
-            })
-        } finally {
-            setLoading(false);
-        }
+        //     setStatus('Wrapping tokens...');
+        //     hash = await writeContract(config, {
+        //         address: wrapperAddress,
+        //         abi: eerc20WrapperAbi,
+        //         functionName: "depositAndWrap",
+        //         args: [userAddress, Number(amount)],
+        //     });
+        //     setStatus('Waiting for confirmation...');
+        //     receipt = await waitForTransactionReceipt(config, { hash });
+        //     setTxHash(hash);
+        //     if (receipt.status) {
+        //         onSuccess();
+        //     } else {
+        //         throw new Error('Transaction Reverted!');
+        //     }
+        // }
+        // catch (e: any) {
+        //     console.error(e);
+        //     toast.error(e.message, {
+        //         ...defaultToast,
+        //         position: 'bottom-right',
+        //     })
+        // } finally {
+        //     setLoading(false);
+        // }
     }
 
     return (
@@ -164,7 +165,7 @@ const Body = () => {
 }
 
 const Wrapper: React.FC = () => {
-    const { isConnected } = useAccount();
+    const { connected } = useWallet();
     const [isConnectionReady, setIsConnectionReady] = useState(false);
 
     useEffect(() => {
@@ -184,9 +185,9 @@ const Wrapper: React.FC = () => {
     return (
         <div className='flex flex-col items-center justify-between flex-1 px-4 py-16'>
             <div className='z-10 flex flex-col items-center justify-between w-full'>
-                <AnimatePresence>{!isConnected && <Title />}</AnimatePresence>
+                <AnimatePresence>{!connected && <Title />}</AnimatePresence>
                 <div className='mt-12'>
-                    <AnimatePresence>{isConnected ? <Body /> : <ConnectButtonWrapper />}</AnimatePresence>
+                    <AnimatePresence>{connected ? <Body /> : <ConnectButtonWrapper />}</AnimatePresence>
                 </div>
             </div>
         </div>

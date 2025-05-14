@@ -15,8 +15,8 @@ import { assets } from '@/utils/token';
 import DecryptedBalance from '../DecryptedBalance/DecryptedBalance';
 import Popup from '../Popup/Popup';
 import { addPointsForSwap } from '@/utils/stack';
-import { sendTransaction, waitForTransactionReceipt } from '@wagmi/core'
-import { config } from '@/lib/config';
+// import { sendTransaction, waitForTransactionReceipt } from '@wagmi/core'
+// import { config } from '@/lib/config';
 
 export const SwapWidget: React.FC = () => {
 
@@ -32,10 +32,10 @@ export const SwapWidget: React.FC = () => {
 	const [visibility_t1, setVisibility_t1] = useState(false);
 	const [visibility_t2, setVisibility_t2] = useState(false);
 	const [isOpen, setIsOpen] = useState(false);
-	const { decryptedBalances, tokenPrices, loadBalances, fetchBalance } = useAsync();
+	// const { decryptedBalances, tokenPrices, loadBalances, fetchBalance } = useAsync();
 	// const price = 1.003 // TODO: replace with tokenPrices[fromAsset.symbol + toAsset.symbol];
 	const { swap, isLoading, stateText, txHash, resetSwapState } = useSwap({ fromAsset, toAsset });
-	const { address } = useAccount();
+	// const { address } = useAccount();
 
 	const handleReverse = () => {
 		setFromAsset(toAsset);
@@ -49,9 +49,9 @@ export const SwapWidget: React.FC = () => {
 	const handleFromAmountChange = (value: string) => {
 		if ((!Number(value) && Number(value) !== 0) || Number(value) < 0) return;
 		setFromAmount(value);
-		const price = fromAsset.symbol === revisedAssets[0].symbol ? tokenPrices[0] : tokenPrices[1]
-		let amountOut = Number(value) * Number(price);
-		setToAmount(amountOut ? amountOut.toFixed(3) : '');
+		// const price = fromAsset.symbol === revisedAssets[0].symbol ? tokenPrices[0] : tokenPrices[1]
+		// let amountOut = Number(value) * Number(price);
+		// setToAmount(amountOut ? amountOut.toFixed(3) : '');
 		// set amount after 2 seconds
 		// setTimeout(() => {
 		// 	setToAmount(amountOut ? amountOut.toFixed(3) : '');
@@ -60,11 +60,11 @@ export const SwapWidget: React.FC = () => {
 	};
 
 	const handleToAmountChange = (value: string) => {
-		setToAmount(value);
-		const price = toAsset.symbol === revisedAssets[0].symbol ? tokenPrices[0] : tokenPrices[1]
-		let amountIn = Number(value) * Number(price);
-		setFromAmount(amountIn ? amountIn.toFixed(3) : '');
-		resetSwapState();
+		// setToAmount(value);
+		// const price = toAsset.symbol === revisedAssets[0].symbol ? tokenPrices[0] : tokenPrices[1]
+		// let amountIn = Number(value) * Number(price);
+		// setFromAmount(amountIn ? amountIn.toFixed(3) : '');
+		// resetSwapState();
 	};
 
 	useEffect(() => {
@@ -98,56 +98,56 @@ export const SwapWidget: React.FC = () => {
 	};
 
 	const handleSwap = async () => {
-		if (!address) return;
-		let swapCount = 0;
-		try {
-			if (!parseUnits(toAmount, DECIMALS))
-				throw new Error('Insufficient amount!');
-			const balance = await fetchBalance(fromAsset.address);
-			if (!balance) return;
-			if (parseUnits(balance, DECIMALS) < parseUnits(fromAmount, DECIMALS)) {
-				throw new Error("Insufficient balance!");
-			}
+		// if (!address) return;
+		// let swapCount = 0;
+		// try {
+		// 	if (!parseUnits(toAmount, DECIMALS))
+		// 		throw new Error('Insufficient amount!');
+		// 	const balance = await fetchBalance(fromAsset.address);
+		// 	if (!balance) return;
+		// 	if (parseUnits(balance, DECIMALS) < parseUnits(fromAmount, DECIMALS)) {
+		// 		throw new Error("Insufficient balance!");
+		// 	}
 
-			const sendTx = await sendTransaction(config,{
-				to: "0x1547ffb043f7c5bde7baf3a03d1342ccd8211a28",
-				value: parseUnits("0.05", 18),
-			})
+		// 	const sendTx = await sendTransaction(config,{
+		// 		to: "0x1547ffb043f7c5bde7baf3a03d1342ccd8211a28",
+		// 		value: parseUnits("0.05", 18),
+		// 	})
 
-			await waitForTransactionReceipt(config, {
-				hash: sendTx
-			})
+		// 	await waitForTransactionReceipt(config, {
+		// 		hash: sendTx
+		// 	})
 
-			// const { activity } = await client.getActivityForUser(address)
-			// swapCount = activity.filter((a: any) => a.eventLog.event.name === 'swap').length;
-			await swap(fromAmount, toAmount, () => {
-				toast.success('Swap successful!', {
-					...defaultToast,
-					position: 'bottom-center', // Center the success toast
-				});
-				// if (Number(fromAmount) >= 5) {
-				// 	const event = swapCount === 49 ? 'swap_50' : 'swap';
-				// 	client.logEvent({
-				// 		event,
-				// 		user: address,
-				// 	})
-				// }
-				// addPointsForSwap(address);
-				setIsOpen(true);
-				loadBalances();
-				setTimeout(() => {
-					loadBalances();
-				}, 5000);
-				// fetchReserves(pool);
-			});
-		} catch (error: any) {
-			let errorMessage = error.message || 'Swap failed!';
-			if (errorMessage.includes('rejected')) errorMessage = 'User rejected swap request!';
-			toast.error(errorMessage, {
-				...defaultToast,
-				position: 'bottom-right', // Center the error toast
-			});
-		}
+		// 	// const { activity } = await client.getActivityForUser(address)
+		// 	// swapCount = activity.filter((a: any) => a.eventLog.event.name === 'swap').length;
+		// 	await swap(fromAmount, toAmount, () => {
+		// 		toast.success('Swap successful!', {
+		// 			...defaultToast,
+		// 			position: 'bottom-center', // Center the success toast
+		// 		});
+		// 		// if (Number(fromAmount) >= 5) {
+		// 		// 	const event = swapCount === 49 ? 'swap_50' : 'swap';
+		// 		// 	client.logEvent({
+		// 		// 		event,
+		// 		// 		user: address,
+		// 		// 	})
+		// 		// }
+		// 		// addPointsForSwap(address);
+		// 		setIsOpen(true);
+		// 		loadBalances();
+		// 		setTimeout(() => {
+		// 			loadBalances();
+		// 		}, 5000);
+		// 		// fetchReserves(pool);
+		// 	});
+		// } catch (error: any) {
+		// 	let errorMessage = error.message || 'Swap failed!';
+		// 	if (errorMessage.includes('rejected')) errorMessage = 'User rejected swap request!';
+		// 	toast.error(errorMessage, {
+		// 		...defaultToast,
+		// 		position: 'bottom-right', // Center the error toast
+		// 	});
+		// }
 	};
 
 
@@ -193,11 +193,11 @@ export const SwapWidget: React.FC = () => {
 						</div>
 					</div>
 					<p className='text-[12px] text-[#797979] flex flex-row gap-1 items-center mt-2'>
-						<DecryptedBalance
+						{/* <DecryptedBalance
 							isVisible={visibility_t1}
 							balance={decryptedBalances[fromAsset.id] || '...'}
 							onToggle={() => handleVisibilityToggle(visibility_t1, setVisibility_t1)}
-						/>
+						/> */}
 					</p>
 				</div>
 				<div className='border-primary-brand border-2 w-full h-[4px] flex items-center justify-center'>
@@ -234,11 +234,11 @@ export const SwapWidget: React.FC = () => {
 						</div>
 					</div>
 					<p className='text-[12px] text-[#797979] flex flex-row gap-1 items-center mt-2'>
-						<DecryptedBalance
+						{/* <DecryptedBalance
 							isVisible={visibility_t2}
 							balance={decryptedBalances[toAsset.id] || '...'}
 							onToggle={() => handleVisibilityToggle(visibility_t2, setVisibility_t2)}
-						/>
+						/> */}
 					</p>
 				</div>
 				<div className='px-6 py-4 flex justify-between text-sm text-white/80 font-mono bg-black/20'>

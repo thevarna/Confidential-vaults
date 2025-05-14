@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { config } from '@/lib/config';
+// import { config } from '@/lib/config';
 import { encryptAmount } from '@/utils/fhevm';
 import { parseUnits, toHex } from 'viem';
 import { eERC20Abi, DECIMALS } from '@/lib/constants';
-import { useAccount } from 'wagmi';
-import { writeContract, waitForTransactionReceipt } from 'wagmi/actions';
+// import { useAccount } from 'wagmi';
+// import { writeContract, waitForTransactionReceipt } from 'wagmi/actions';
 import { toast } from 'sonner';
 import { defaultToast } from '@/utils/toastStyles';
 

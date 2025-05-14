@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import { useAccount } from 'wagmi';
+// import { useAccount } from 'wagmi';
 
 interface PopupProps {
     isOpen: boolean;
@@ -11,7 +11,7 @@ interface PopupProps {
 }
 
 export default function Popup({ isOpen, setIsOpen, txHash, fromAmount, toAmount }: PopupProps) {
-    const { chain } = useAccount();
+    // const { chain } = useAccount();
     return (
         isOpen && <>
             <div className="fixed inset-0 flex justify-center items-center z-20 w-[33%] h-[78%] m-auto text-white font-mono">
@@ -29,13 +29,13 @@ export default function Popup({ isOpen, setIsOpen, txHash, fromAmount, toAmount 
                             <div className='p-4 pt-10 text-center'>SWAP COMPLETED SUCCESSFULLY
                                 <div className='p-4 text-center text-[#9c9d9c]'>
                                     Transaction completed. You can view it on the&nbsp;
-                                    <a
+                                    {/* <a
                                         className='text-primary-brand-light underline hover:cursor-pointer'
                                         href={`${chain?.blockExplorers?.default?.url}/tx/${txHash}`}
                                         target='_blank'
                                     >
                                         Block Explorer
-                                    </a> and&nbsp;
+                                    </a> and&nbsp; */}
                                     <a
                                         className='text-primary-brand-light underline hover:cursor-pointer'
                                         href={`https://dashboard.tenderly.co/tx/base-sepolia/${txHash}`}
