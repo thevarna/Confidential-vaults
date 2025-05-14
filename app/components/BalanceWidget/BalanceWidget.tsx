@@ -1,7 +1,6 @@
 "use client"
 import React, { useState, useEffect } from "react";
 import Image from 'next/image';
-import { useAccount } from "wagmi";
 import { AnimatePresence, motion } from "framer-motion";
 import CustomConnectButton from "../ConnectButton/ConnectButton";
 import UnderlinedText from "../UnderlinedText/UnderlinedText";
@@ -10,6 +9,7 @@ import DecryptedBalance from "../DecryptedBalance/DecryptedBalance";
 import { UnwrapButton, DecryptButton } from "./Button";
 import { useAsync } from "@/app/hooks/useAsync";
 import { assets } from "@/utils/token";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 const Title = () => (
     <motion.h1
@@ -117,7 +117,7 @@ const LoadingState = () => (
 );
 
 const BalanceWidget: React.FC = () => {
-    const { isConnected } = useAccount();
+    const { connected } = useWallet();
     const [isConnectionReady, setIsConnectionReady] = useState(false);
 
     useEffect(() => {
@@ -137,9 +137,9 @@ const BalanceWidget: React.FC = () => {
     return (
         <div className='flex flex-col items-center justify-between flex-1 px-4 py-16'>
             <div className='z-10 flex flex-col items-center justify-between w-full'>
-                <AnimatePresence>{!isConnected && <Title />}</AnimatePresence>
+                <AnimatePresence>{!connected && <Title />}</AnimatePresence>
                 <div className='mt-12'>
-                    <AnimatePresence>{isConnected ? <Body /> : <ConnectButtonWrapper />}</AnimatePresence>
+                    <AnimatePresence>{connected ? <Body /> : <ConnectButtonWrapper />}</AnimatePresence>
                 </div>
             </div>
         </div>

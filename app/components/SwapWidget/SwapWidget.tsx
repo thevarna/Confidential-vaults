@@ -11,7 +11,7 @@ import { defaultToast } from '@/utils/toastStyles';
 import { useSwap } from '@/app/hooks/useSwap';
 import { assets } from '@/utils/token';
 // import { client } from '@/utils/pointy';
-import { useAccount } from 'wagmi';
+// import { useAccount } from 'wagmi';
 import DecryptedBalance from '../DecryptedBalance/DecryptedBalance';
 import Popup from '../Popup/Popup';
 import { addPointsForSwap } from '@/utils/stack';

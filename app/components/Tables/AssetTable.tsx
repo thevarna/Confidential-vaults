@@ -4,9 +4,9 @@ import { useAsync } from "@/app/hooks/useAsync"
 import { assets } from "@/utils/token"
 import { ethers, JsonRpcProvider, parseUnits } from "ethers"
 import { useEffect, useState } from "react"
-import { useAccount, useWalletClient } from "wagmi"
+// import { useAccount, useWalletClient } from "wagmi"
 import Image from "next/image"
-import { writeContract } from "wagmi/actions"
+// import { writeContract } from "wagmi/actions"
 import { config } from "@/lib/config"
 import { eERC20Abi, eerc20WrapperAbi } from "@/lib/constants"
 import { toast } from "sonner"
@@ -22,7 +22,7 @@ export default function AssetTable() {
     const [monValue, setMonValue] = useState("0")
     const [txInProgress, setTxInProgress] = useState(false)
 
-    const { address: userAddress } = useAccount();
+    // const { address: userAddress } = useAccount();
     const { provider } = new JsonRpcProvider(process.env.NEXT_PUBLIC_MONAD_RPC_URL)
 
     const tokens: Record<string, { address: string; wrapper: string }> = {
@@ -40,12 +40,12 @@ export default function AssetTable() {
         }
     }
 
-    useEffect(() => {
-        if (!userAddress) return
-        provider.getBalance(userAddress).then((balance) => {
-            setMonValue((Number(balance) / 1e18).toFixed(3))
-        })
-    }, [userAddress])
+    // useEffect(() => {
+    //     if (!userAddress) return
+    //     provider.getBalance(userAddress).then((balance) => {
+    //         setMonValue((Number(balance) / 1e18).toFixed(3))
+    //     })
+    // }, [userAddress])
 
     type EncryptCellProps = {
         tokenSymbol: string;
@@ -58,9 +58,9 @@ export default function AssetTable() {
         const [value, setValue] = useState("")
         if (!tokens[tokenSymbol]) return null
 
-        const { chain } = useAccount();
-        const { address: userAddress } = useAccount()
-        const result = useWalletClient()
+        // const { chain } = useAccount();
+        // const { address: userAddress } = useAccount()
+        // const result = useWalletClient()
 
         const tokenAddress = tokens[tokenSymbol].address
         const wrapperAddress = tokens[tokenSymbol].wrapper
@@ -80,69 +80,69 @@ export default function AssetTable() {
                     console.log("Encrypted amount", encAmount)
                     const proof = '0x01'
 
-                    let hash = await writeContract(config, {
-                        address: wrapperAddress as `0x${string}`,
-                        abi: [{
-                            "inputs": [
-                                {
-                                    "internalType": "address",
-                                    "name": "_to",
-                                    "type": "address"
-                                },
-                                {
-                                    "internalType": "einput",
-                                    "name": "_encryptedAmount",
-                                    "type": "bytes32"
-                                },
-                                {
-                                    "internalType": "bytes",
-                                    "name": "_inputProof",
-                                    "type": "bytes"
-                                }
-                            ],
-                            "name": "withdrawToken",
-                            "outputs": [],
-                            "stateMutability": "nonpayable",
-                            "type": "function"
-                        }],
-                        functionName: 'withdrawToken',
-                        args: [userAddress as `0x${string}`, toHex(encAmount), proof],
-                        gas: parseUnits("5", 6)
-                    })
+                    // let hash = await writeContract(config, {
+                    //     address: wrapperAddress as `0x${string}`,
+                    //     abi: [{
+                    //         "inputs": [
+                    //             {
+                    //                 "internalType": "address",
+                    //                 "name": "_to",
+                    //                 "type": "address"
+                    //             },
+                    //             {
+                    //                 "internalType": "einput",
+                    //                 "name": "_encryptedAmount",
+                    //                 "type": "bytes32"
+                    //             },
+                    //             {
+                    //                 "internalType": "bytes",
+                    //                 "name": "_inputProof",
+                    //                 "type": "bytes"
+                    //             }
+                    //         ],
+                    //         "name": "withdrawToken",
+                    //         "outputs": [],
+                    //         "stateMutability": "nonpayable",
+                    //         "type": "function"
+                    //     }],
+                    //     functionName: 'withdrawToken',
+                    //     args: [userAddress as `0x${string}`, toHex(encAmount), proof],
+                    //     gas: parseUnits("5", 6)
+                    // })
 
-                    if (tokenSymbol === "SHMON") {
-                        const relaySigner = new ethers.Wallet(process.env.REFILL_PRIVATE_KEY as string, provider)
-                        const eSHMONcontract = new ethers.Contract('0x3D59b1048f4FF69b8B57e0bF6747827d9fd39dc6', eERC20Abi, relaySigner)
-                        const balanceAmount = parseUnits(value, 18) - parseUnits(value, 6)
-                        const encBalance = await client.encrypt(balanceAmount, PlaintextType.uint32);
-                        const transferTx = await eSHMONcontract.transferFrom(wrapperAddress, userAddress, toHex(encBalance), proof)
-                        await transferTx.wait()
-                        console.log("SHMON transferred")
-                    }
+                    // if (tokenSymbol === "SHMON") {
+                    //     const relaySigner = new ethers.Wallet(process.env.REFILL_PRIVATE_KEY as string, provider)
+                    //     const eSHMONcontract = new ethers.Contract('0x3D59b1048f4FF69b8B57e0bF6747827d9fd39dc6', eERC20Abi, relaySigner)
+                    //     const balanceAmount = parseUnits(value, 18) - parseUnits(value, 6)
+                    //     const encBalance = await client.encrypt(balanceAmount, PlaintextType.uint32);
+                    //     const transferTx = await eSHMONcontract.transferFrom(wrapperAddress, userAddress, toHex(encBalance), proof)
+                    //     await transferTx.wait()
+                    //     console.log("SHMON transferred")
+                    // }
 
-                    await provider.waitForTransaction(hash)
-                    toast.custom(
-                        (t) => (
-                            <div className="font-mono text-sm text-primary-brand-light bg-primary-brand/15 border border-primary-brand/25 backdrop-blur-sm p-4 rounded-lg shadow-lg">
-                                <div className="flex items-center">
-                                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                    </svg>
-                                    <p>All tokens wrapped successfully</p>
-                                </div>
-                                <p className="mt-1 text-xs">
-                                    Transaction ID: {hash.slice(0, 5)}...{hash.slice(-3)}
-                                </p>
-                                <button
-                                    onClick={() => window.open(`${chain?.blockExplorers?.default?.url}/tx/${hash}`, '_blank')}
-                                    className="mt-2 bg-primary-brand/20 text-primary-brand-light px-3 py-1 rounded text-xs hover:bg-primary-brand/30 transition-colors duration-200"
-                                >
-                                    View on Explorer
-                                </button>
-                            </div>
-                        ),
-                        { duration: 5000 }
-                    );
+                    // await provider.waitForTransaction(hash)
+                    // toast.custom(
+                    //     (t) => (
+                    //         <div className="font-mono text-sm text-primary-brand-light bg-primary-brand/15 border border-primary-brand/25 backdrop-blur-sm p-4 rounded-lg shadow-lg">
+                    //             <div className="flex items-center">
+                    //                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    //                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    //                 </svg>
+                    //                 <p>All tokens wrapped successfully</p>
+                    //             </div>
+                    //             <p className="mt-1 text-xs">
+                    //                 Transaction ID: {hash.slice(0, 5)}...{hash.slice(-3)}
+                    //             </p>
+                    //             <button
+                    //                 onClick={() => window.open(`${chain?.blockExplorers?.default?.url}/tx/${hash}`, '_blank')}
+                    //                 className="mt-2 bg-primary-brand/20 text-primary-brand-light px-3 py-1 rounded text-xs hover:bg-primary-brand/30 transition-colors duration-200"
+                    //             >
+                    //                 View on Explorer
+                    //             </button>
+                    //         </div>
+                    //     ),
+                    //     { duration: 5000 }
+                    // );
                     console.log("Wrapped")
                 } catch (error) {
                     console.error('Wrap failed', error)

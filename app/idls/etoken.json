@@ -192,15 +192,16 @@
                     "signer": true
                 },
                 {
-                    "name": "authority",
-                    "signer": true
-                },
-                {
                     "name": "system_program",
                     "address": "11111111111111111111111111111111"
                 }
             ],
-            "args": []
+            "args": [
+                {
+                    "name": "authority",
+                    "type": "pubkey"
+                }
+            ]
         },
         {
             "name": "initialize_mint",

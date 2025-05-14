@@ -4,9 +4,9 @@ import { useAsync } from "@/app/hooks/useAsync"
 import { assets } from "@/utils/token"
 import { JsonRpcProvider, parseUnits } from "ethers"
 import { useEffect, useState } from "react"
-import { useAccount } from "wagmi"
+// import { useAccount } from "wagmi"
 import Image from "next/image"
-import { writeContract } from "wagmi/actions"
+// import { writeContract } from "wagmi/actions"
 import { config } from "@/lib/config"
 import { eerc20WrapperAbi, encifherERC20Abi } from "@/lib/constants"
 import { toast } from "sonner"
@@ -35,15 +35,15 @@ export default function ERC20Table() {
         }
     }
 
-    const { address: userAddress } = useAccount()
+    // const { address: userAddress } = useAccount()
     const provider = new JsonRpcProvider(process.env.NEXT_PUBLIC_MONAD_RPC_URL)
 
-    useEffect(() => {
-        if (!userAddress) return
-        provider.getBalance(userAddress).then((balance) => {
-            setMonValue((Number(balance) / 1e18).toFixed(3))
-        })
-    }, [userAddress])
+    // useEffect(() => {
+    //     if (!userAddress) return
+    //     provider.getBalance(userAddress).then((balance) => {
+    //         setMonValue((Number(balance) / 1e18).toFixed(3))
+    //     })
+    // }, [userAddress])
 
     // EncryptCell now receives the global txInProgress state and its setter.
     type EncryptCellProps = {
@@ -56,7 +56,7 @@ export default function ERC20Table() {
         const [value, setValue] = useState("")
         if (!tokens[tokenSymbol]) return null
 
-        const { chain } = useAccount();
+        // const { chain } = useAccount();
 
         const tokenAddress = tokens[tokenSymbol].address
         const wrapperAddress = tokens[tokenSymbol].wrapper
@@ -70,58 +70,58 @@ export default function ERC20Table() {
 
             try {
                 try {
-                    let hash = await writeContract(config, {
-                        address: tokenAddress as `0x${string}`,
-                        abi: encifherERC20Abi,
-                        functionName: 'approve',
-                        args: [wrapperAddress, parseUnits(value, is_shmon ? 18 : 6)],
-                    })
-                    await provider.waitForTransaction(hash)
-                    console.log("Approved")
+                    // let hash = await writeContract(config, {
+                    //     address: tokenAddress as `0x${string}`,
+                    //     abi: encifherERC20Abi,
+                    //     functionName: 'approve',
+                    //     args: [wrapperAddress, parseUnits(value, is_shmon ? 18 : 6)],
+                    // })
+                    // await provider.waitForTransaction(hash)
+                    // console.log("Approved")
                 } catch (error) {
                     console.error('Approve failed', error)
                 }
                 try {
 
-                    if (is_shmon) {
-                        let hash = await writeContract(config, {
-                            address: tokenAddress as `0x${string}`,
-                            abi: encifherERC20Abi,
-                            functionName: 'transfer',
-                            args: [wrapperAddress, (parseUnits(value, 18) - parseUnits(value, 6)).toString()],
-                        })
-                        await provider.waitForTransaction(hash)
-                    }
+                    // if (is_shmon) {
+                    //     let hash = await writeContract(config, {
+                    //         address: tokenAddress as `0x${string}`,
+                    //         abi: encifherERC20Abi,
+                    //         functionName: 'transfer',
+                    //         args: [wrapperAddress, (parseUnits(value, 18) - parseUnits(value, 6)).toString()],
+                    //     })
+                    //     await provider.waitForTransaction(hash)
+                    // }
 
-                    let hash = await writeContract(config, {
-                        address: wrapperAddress as `0x${string}`,
-                        abi: eerc20WrapperAbi,
-                        functionName: 'depositAndWrap',
-                        args: [userAddress, parseUnits(value, 6)],
-                    })
-                    await provider.waitForTransaction(hash)
-                    toast.custom(
-                        (t) => (
-                            <div className="font-mono text-sm text-primary-brand-light bg-primary-brand/15 border border-primary-brand/25 backdrop-blur-sm p-4 rounded-lg shadow-lg">
-                                <div className="flex items-center">
-                                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                    </svg>
-                                    <p>All tokens wrapped successfully</p>
-                                </div>
-                                <p className="mt-1 text-xs">
-                                    Transaction ID: {hash.slice(0, 5)}...{hash.slice(-3)}
-                                </p>
-                                <button
-                                    onClick={() => window.open(`${chain?.blockExplorers?.default?.url}/tx/${hash}`, '_blank')}
-                                    className="mt-2 bg-primary-brand/20 text-primary-brand-light px-3 py-1 rounded text-xs hover:bg-primary-brand/30 transition-colors duration-200"
-                                >
-                                    View on Explorer
-                                </button>
-                            </div>
-                        ),
-                        { duration: 5000 }
-                    );
+                    // let hash = await writeContract(config, {
+                    //     address: wrapperAddress as `0x${string}`,
+                    //     abi: eerc20WrapperAbi,
+                    //     functionName: 'depositAndWrap',
+                    //     args: [userAddress, parseUnits(value, 6)],
+                    // })
+                    // await provider.waitForTransaction(hash)
+                    // toast.custom(
+                    //     (t) => (
+                    //         <div className="font-mono text-sm text-primary-brand-light bg-primary-brand/15 border border-primary-brand/25 backdrop-blur-sm p-4 rounded-lg shadow-lg">
+                    //             <div className="flex items-center">
+                    //                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    //                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    //                 </svg>
+                    //                 <p>All tokens wrapped successfully</p>
+                    //             </div>
+                    //             <p className="mt-1 text-xs">
+                    //                 Transaction ID: {hash.slice(0, 5)}...{hash.slice(-3)}
+                    //             </p>
+                    //             <button
+                    //                 onClick={() => window.open(`${chain?.blockExplorers?.default?.url}/tx/${hash}`, '_blank')}
+                    //                 className="mt-2 bg-primary-brand/20 text-primary-brand-light px-3 py-1 rounded text-xs hover:bg-primary-brand/30 transition-colors duration-200"
+                    //             >
+                    //                 View on Explorer
+                    //             </button>
+                    //         </div>
+                    //     ),
+                    //     { duration: 5000 }
+                    // );
                     console.log("Wrapped")
                 } catch (error) {
                     console.error('Wrap failed', error)

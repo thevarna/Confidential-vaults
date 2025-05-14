@@ -4,8 +4,8 @@ import Searchbar from "./Searchbar";
 import axios from "axios";
 import AddressWithCopy from "./AddressWithCopy";
 import Pageindex from "./Pageindex";
-import { useAccount } from "wagmi";
-import { client } from "@/utils/stackr";
+// import { useAccount } from "wagmi";
+// import { client } from "@/utils/stackr";
 // import InfoButton from "./component/Info";
 
 type point = { rank: number; address: string; points: number };
@@ -17,7 +17,7 @@ const Leaderboard = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const pointsPerPage = 5;
 
-  const { address: userAddress } = useAccount();
+  // const { address: userAddress } = useAccount();
 
   useEffect(() => {
     const getData = async () => {
@@ -56,14 +56,14 @@ const Leaderboard = () => {
   const pageNum = Math.ceil(filteredPoints.length / pointsPerPage);
 
   // Check if the user's address is in the current page
-  const isUserInCurrentPage = currentPoints.some(
-    (value) => value.address.toLowerCase() === userAddress?.toLowerCase()
-  );
+  // const isUserInCurrentPage = currentPoints.some(
+  //   (value) => value.address.toLowerCase() === userAddress?.toLowerCase()
+  // );
 
   // Get the user's rank from the full list (not paginated)
-  const userRank = point.find(
-    (value) => value.address.toLowerCase() === userAddress?.toLowerCase()
-  );
+  // const userRank = point.find(
+  //   (value) => value.address.toLowerCase() === userAddress?.toLowerCase()
+  // );
 
   return (
     <div className="flex flex-col gap-4 items-center justify-center w-[400px] md:w-[700px] md:mt-10 font-mono">
@@ -78,7 +78,10 @@ const Leaderboard = () => {
         <div className="flex flex-row justify-between items-center text-[#D0D0D0] text-[14px] md:text-[18px] font-bold uppercase bg-[#5024FF] bg-opacity-[8%] px-[20px] py-[8px] border-b border-[#5024FF] text-left ">
           <h1 className="w-[40%]">Rank</h1>
           <h1 className="w-[50%]">Address</h1>
-          <h1 className="flex flex-row w-[20%]  text-right">Points <div className="w-[25px]"><InfoButton/></div> </h1>
+          <h1 className="flex flex-row w-[20%]  text-right">Points <div className="w-[25px]">
+            {/* <InfoButton/> */}
+          </div>
+          </h1>
         </div>
 
         <div className="flex flex-col gap-2 text-[#71717A] text-[14px] md:text-[18px] mt-2">
@@ -88,7 +91,7 @@ const Leaderboard = () => {
               key={index}
             >
               <h1 className="flex w-[40%] text-center items-start">
-                <span
+                {/* <span
                   className={`${
                     value.address.toLowerCase() === userAddress?.toLowerCase()
                       ? "bg-[#5024FF] bg-opacity-50" // Highlight user's row in purple
@@ -96,7 +99,7 @@ const Leaderboard = () => {
                   } rounded-sm py-[8px] px-[14px] md:py-[12px] md:px-[20px] `}
                 >
                   {value.rank}
-                </span>
+                </span> */}
               </h1>
               <div className="w-[60%]">
                 <AddressWithCopy address={value.address} />
@@ -110,7 +113,7 @@ const Leaderboard = () => {
           ))}
 
           {/* If user is not in current page, display user's rank at the bottom */}
-          {!isUserInCurrentPage && userRank && (
+          {/* {!isUserInCurrentPage && userRank && (
             <div className="flex flex-row items-center justify-between px-[20px] py-[10px]">
               <h1 className="flex w-[40%] text-center items-start">
                 <span className="rounded-sm py-[8px] px-[14px] md:py-[12px] md:px-[20px] bg-[#5024FF] bg-opacity-50">
@@ -126,7 +129,7 @@ const Leaderboard = () => {
                 })}
               </h1>
             </div>
-          )}
+          )} */}
         </div>
       </div>
 

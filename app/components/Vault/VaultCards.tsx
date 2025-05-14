@@ -1,17 +1,33 @@
 import React, { useState } from 'react';
 import { useOrderPlacement } from '@/app/hooks/usePlaceOrder';
-import { useConnection, useWallet, useAnchorWallet } from '@solana/wallet-adapter-react';
+import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { PublicKey } from '@solana/web3.js'
 import { EMINT, EUSDC_ACCOUNT, EXECUTOR, ORDER_MANAGER } from '@/lib/constants';
+import { toast } from 'sonner';
+import { defaultToast } from '@/utils/toastStyles';
+import DecryptedBalance from '../DecryptedBalance/DecryptedBalance';
+import { useAsync } from '@/app/hooks/useAsync';
 
 interface DepositModalProps {
     isOpen: boolean;
     onClose: () => void;
+    userBalance: string;
+    loadBalances: () => void;
 };
 
-const DepositModal = ({ isOpen, onClose }: DepositModalProps) => {
+const handleVisibilityToggle = (isVisible: boolean, setVisibility: React.Dispatch<React.SetStateAction<boolean>>) => {
+    setVisibility(!isVisible);
+    toast(isVisible ? 'Encrypting Balance' : 'Decrypting Balance', {
+        ...defaultToast,
+        position: 'bottom-center', // Center the toast notifications
+    });
+};
+
+const DepositModal = ({ isOpen, onClose, userBalance, loadBalances }: DepositModalProps) => {
     if (!isOpen) return null;
-    const [amount, setAmount] = useState<string>('10');
+    const [amount, setAmount] = useState<string>('5');
+    const [txHash, setTxHash] = useState<string>("");
+    const [visibility, setVisibility] = useState(false);
     const { publicKey } = useWallet();
     const { connection } = useConnection();
     const { placeOrders, isLoading, error } = useOrderPlacement({
@@ -33,13 +49,12 @@ const DepositModal = ({ isOpen, onClose }: DepositModalProps) => {
                     >
                         ×
                     </button>
-                    <h2 className="text-center text-lg font-mono mb-4">DEPOSIT INTO ETH-USDC</h2>
+                    <h2 className="text-center text-lg font-mono mb-4">DEPOSIT INTO SOL-USDC</h2>
 
                     <label className="block text-sm mb-1 font-mono">AMOUNT</label>
                     <div className="flex items-center bg-primary-dark rounded px-4 py-2 mb-4">
                         <input
                             type="text"
-                            defaultValue="10"
                             value={amount}
                             className="text-white bg-transparent w-full outline-none font-mono"
                             onChange={(e) => setAmount(e.target.value)}
@@ -54,6 +69,15 @@ const DepositModal = ({ isOpen, onClose }: DepositModalProps) => {
                     className="w-full bg-primary border border-gray-600 rounded px-3 py-2 mb-4 text-white font-mono"
                 /> */}
 
+                    <p className='text-[12px] text-[#797979] flex flex-row gap-1 items-center mb-2'>
+                        {/* Available Balance: */}
+                        <DecryptedBalance
+                            isVisible={visibility}
+                            balance={userBalance || "..."}
+                            onToggle={() => handleVisibilityToggle(visibility, setVisibility)}
+                        />
+                    </p>
+
                     <div className="flex items-center space-x-2 mb-4">
                         <input type="checkbox" defaultChecked className="bg-primary-brand/15" />
                         <label className="text-xs font-mono text-gray-300">
@@ -65,9 +89,35 @@ const DepositModal = ({ isOpen, onClose }: DepositModalProps) => {
                 <div className="w-full rounded-b-md">
                     <button
                         className='rounded-b-md px-4 py-2 w-full font-mono text-sm uppercase border text-primary-brand-light bg-primary-brand/15 border-primary-brand/25 backdrop-blur-sm hover:bg-primary-brand/25 transition-all duration-300'
-                        onClick={() => placeOrders(amount)}
+                        onClick={async () => {
+                            const txHash = await placeOrders(amount);
+                            setTxHash(txHash || "");
+                            loadBalances();
+                            toast.custom(
+                                (t) => (
+                                    <div className="font-mono text-sm text-primary-brand-light bg-primary-brand/15 border border-primary-brand/25 backdrop-blur-sm p-4 rounded-lg shadow-lg">
+                                        <div className="flex items-center">
+                                            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                            </svg>
+                                            <p>Deposited {amount} USDC successfully!</p>
+                                        </div>
+                                        <p className="mt-1 text-xs">
+                                            Transaction ID: {txHash?.slice(0, 5)}...{txHash?.slice(-3)}
+                                        </p>
+                                        <button
+                                            onClick={() => window.open(`https://solscan.io/tx/${txHash}?cluster=devnet`, '_blank')}
+                                            className="mt-2 bg-primary-brand/20 text-primary-brand-light px-3 py-1 rounded text-xs hover:bg-primary-brand/30 transition-colors duration-200"
+                                        >
+                                            View on Explorer
+                                        </button>
+                                    </div>
+                                ),
+                                { duration: 5000 }
+                            );
+                        }}
                     >
-                        {isLoading ? "Depositing..." : "Deposit"}
+                        {isLoading ? "Depositing..." : error ? "Error deposting" : txHash ? "Deposited" : "Deposit"}
                     </button>
                 </div>
             </div>
@@ -78,7 +128,7 @@ const DepositModal = ({ isOpen, onClose }: DepositModalProps) => {
 interface VaultCardProps {
     token: string;
     apy: string;
-    tvl: string;
+    icon: string;
     strategy: string;
     risk: string;
 }
@@ -86,17 +136,18 @@ interface VaultCardProps {
 const VaultCard: React.FC<VaultCardProps> = ({
     token,
     apy,
-    tvl,
+    icon,
     strategy,
     risk,
 }) => {
     const [showModal, setShowModal] = useState(false);
+    const { decryptedBalances, loadBalances } = useAsync();
     return (
         <div className="bg-black rounded-md overflow-hidden font-mono flex flex-col gap-2">
             {/* Card Header */}
             <div className="p-4 flex justify-between items-center border-b border-white/5">
                 <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 bg-white rounded-full"></div>
+                    <img src={icon} className='h-10 w-10 rounded-full' />
                     <div className="text-left">
                         <h3 className="text-white font-medium text-lg">{token}</h3>
                         <p className="text-white/60 text-xs">AUTO-COMPOUNDED YIELD</p>
@@ -117,8 +168,8 @@ const VaultCard: React.FC<VaultCardProps> = ({
                 <div className="flex items-center gap-2">
                     <p className="text-white/60 text-xs">PROTOCOL:</p>
                     <div className="flex items-center gap-1">
-                        <div className="h-3 w-3 rounded-full bg-red-500"></div>
-                        <span className="text-white text-xs">INFRARED</span>
+                        <img className="h-4 w-4 rounded-full" src="/drift.png" />
+                        <span className="text-white text-xs">DRIFT</span>
                     </div>
                 </div>
             </div>
@@ -131,7 +182,7 @@ const VaultCard: React.FC<VaultCardProps> = ({
                 </div>
                 <div className="p-4 bg-primary-dark rounded-sm">
                     <p className="text-white/60 text-xs mb-1">TVL</p>
-                    <p className="text-white font-medium">{tvl}</p>
+                    <p className="text-white font-medium">${decryptedBalances[1] || "..."}</p>
                 </div>
             </div>
 
@@ -153,17 +204,16 @@ const VaultCard: React.FC<VaultCardProps> = ({
                     Deposit
                 </button>
             </div>
-            <DepositModal isOpen={showModal} onClose={() => setShowModal(false)} />
+            <DepositModal isOpen={showModal} onClose={() => setShowModal(false)} userBalance={decryptedBalances[0]} loadBalances={loadBalances} />
         </div>
     );
 };
 
 export default function VaultCards() {
-    // const [showModal, setShowModal] = useState(false);
     const vaults = [
-        { token: 'USDT', apy: '8.4%', tvl: '$4.2M', strategy: 'DELTA', risk: 'MEDIUM' },
-        { token: 'USDC', apy: '8.4%', tvl: '$4.2M', strategy: 'DELTA', risk: 'MEDIUM' },
-        { token: 'USDC', apy: '8.4%', tvl: '$4.2M', strategy: 'DELTA', risk: 'MEDIUM' },
+        { token: 'USDC', apy: '8.4%', icon: '/usdc.svg', strategy: 'DELTA', risk: 'MEDIUM' },
+        { token: 'USDT', apy: '8.4%', icon: '/usdt.svg', strategy: 'DELTA', risk: 'MEDIUM' },
+        { token: 'USDT', apy: '8.4%', icon: '/usdt.svg', strategy: 'DELTA', risk: 'MEDIUM' },
     ];
 
     return (
@@ -174,14 +224,12 @@ export default function VaultCards() {
                         key={index}
                         token={vault.token}
                         apy={vault.apy}
-                        tvl={vault.tvl}
+                        icon={vault.icon}
                         strategy={vault.strategy}
                         risk={vault.risk}
-                    // setShowModal={setShowModal}
                     />
                 ))}
             </div>
-            {/* <DepositModal isOpen={showModal} onClose={() => setShowModal(false)} /> */}
         </div>
     )
 }

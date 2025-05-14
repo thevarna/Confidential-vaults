@@ -2,9 +2,10 @@
 import AssetTable from "../components/Tables/AssetTable";
 import { motion, AnimatePresence } from "framer-motion";
 import UnderlinedText from "../components/UnderlinedText/UnderlinedText";
-import { useAccount } from "wagmi";
+// import { useAccount } from "wagmi";
 import CustomConnectButton from "../components/ConnectButton/ConnectButton";
 import ERC20Table from "../components/Tables/ERC20Table";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 const Title = () => (
     <motion.h1
@@ -32,9 +33,9 @@ const ConnectButtonWrapper = () => (
 );
 
 export default function Page() {
-    const { isConnected } = useAccount();
+    const { connected } = useWallet();
     return <>
-        {isConnected ? (
+        {connected ? (
             <div className="max-h-screen flex flex-col items-center justify-start w-full gap-5">
                 <ERC20Table />
                 <AssetTable />

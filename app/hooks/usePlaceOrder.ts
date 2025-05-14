@@ -70,7 +70,7 @@ export const useOrderPlacement = ({
             const client = new TEEClient({ teeGatewayUrl: process.env.NEXT_PUBLIC_TEE_GATEWAY_URL! });
             await client.init();
             const parsedAmount = Number(amount) * 10 ** 6;
-            const encAmount = await client.encrypt(parsedAmount, PlaintextType.uint32);
+            const encAmount = await client.encrypt(parsedAmount, PlaintextType.uint64);
 
             const ix = await orderManagerProgram.methods.placeOrder(deadline, {
                 handle: new anchor.BN(encAmount),
