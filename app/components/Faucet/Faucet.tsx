@@ -52,6 +52,7 @@ const LoadingState = () => (
 
 const tokens: Token[] = [
   { symbol: 'USDC', icon: '/usdc.svg', value: '5' },
+  { symbol: 'SOL', icon: '/usdc.svg', value: '0.01' },
 ];
 
 const FaucetContent: React.FC = () => {
