@@ -36,7 +36,7 @@ export default function Portfolio() {
 
                 <div className="col-span-1 text-left md:text-right">
                     <p className="text-white/60 text-sm mb-1">VAULTS</p>
-                    <p className="text-white text-xl">1116</p>
+                    <p className="text-white text-xl">3</p>
                 </div>
             </div>
         </div>
