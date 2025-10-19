@@ -1,6 +1,7 @@
 import { MongoClient } from "mongodb";
 require('dotenv').config();
 
+
 // URL for fetching transaction data
 // const API_URL = process.env.API_URL || "http://localhost:3000/api/transactions";
 const API_URL = process.env.API_URL || "https://monad.encifher.io/api/transactions";
