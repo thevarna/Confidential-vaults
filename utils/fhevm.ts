@@ -5,6 +5,7 @@ import { TEEClient, PlaintextType } from '@encifher-js/core';
 export const encryptAmount = async (address: string, amount: bigint, contractAddress: string) => {
 	// if (!client) {
 	// 	client = new TEEClient();
+	
 	// }
   const client = new TEEClient({ teeGatewayUrl: process.env.TEE_GATEWAY_URL || 'https://monad.encrypt.rpc.encifher.io' });
   await client.init();
