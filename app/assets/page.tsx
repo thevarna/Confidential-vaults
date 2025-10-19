@@ -7,6 +7,8 @@ import CustomConnectButton from "../components/ConnectButton/ConnectButton";
 import ERC20Table from "../components/Tables/ERC20Table";
 import { useWallet } from "@solana/wallet-adapter-react";
 
+
+
 const Title = () => (
     <motion.h1
         key='faucet-title'
@@ -55,4 +57,5 @@ export default function Page() {
         )
         };
     </>
+
 }
