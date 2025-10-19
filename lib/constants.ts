@@ -20,6 +20,7 @@ export const addresses: { [key: string]: `0x${string}` } = {
   "USDCENCOrderManager": process.env.NEXT_PUBLIC_USDC_ENC_ORDER_MANAGER_ADDRESS as `0x${string}`,
   "USDTENCOrderManager": process.env.NEXT_PUBLIC_USDT_ENC_ORDER_MANAGER_ADDRESS as `0x${string}`,
 }
+
 export const UNISWAP_USDCUSDT_POOLID = "0xb7f084c7f7f1c680d08780e2b2ef4f2133db0df8"
 
 export const eERC20Abi = [
@@ -2040,4 +2041,5 @@ export const anonTransferAbi = [
     "stateMutability": "nonpayable",
     "type": "function"
   }
+
 ]
